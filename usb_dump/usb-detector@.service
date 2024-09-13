@@ -5,7 +5,7 @@ After=dev-%i.device
 [Service]
 Type=simple
 ExecStartPre=/bin/sleep 2
-ExecStart=/home/flip/PiLiDAR/usb_detector.sh %I
+ExecStart=/home/pi/PiLiDAR/usb_dump/usb_detector.sh %I
 
 [Install]
 WantedBy=multi-user.target

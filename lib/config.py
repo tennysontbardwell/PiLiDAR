@@ -66,7 +66,7 @@ class Config:
 
 
         if self.platform == 'RaspberryPi':
-            print("PiDAR on Raspberry Pi")
+            print("PiLiDAR on Raspberry Pi")
 
             # BUG legacy: allow access to serial port on Raspberry Pi
             allow_serial()

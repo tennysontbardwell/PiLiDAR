@@ -34,7 +34,7 @@ START_PIN = 17
 
 CONDA_PATH  = "/home/pi/miniforge3/condabin/conda"
 CONDA_ENV   = "py311"
-MAIN_SCRIPT = "/home/pi/Documents/PiDAR/PiDAR.py"
+MAIN_SCRIPT = "/home/pi/PiLiDAR/PiLiDAR.py"
 
 
 # # DISABLE USB POWER

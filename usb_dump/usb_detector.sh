@@ -1,7 +1,7 @@
 #!/bin/bash
 
 LOG_FILE="/tmp/usb_detector.log"
-PYTHON_SCRIPT="/home/flip/PiLiDAR/usb_dump.py"
+PYTHON_SCRIPT="/home/pi/PiLiDAR/usb_dump/usb_dump.py"
 
 echo "$(date): Script started for device $1" >> "$LOG_FILE"
 
@@ -19,18 +19,11 @@ if [ -z "$UUID" ]; then
     exit 1
 fi
 
-# Function to find the mount point
-find_mount_point() {
-    local uuid="$1"
-    mount | grep -i "$uuid" | cut -d' ' -f3
-}
-
 # Wait for the mount point to become available
 MAX_WAIT=30
+MOUNT_POINT="/media/usb-$1"
 for i in $(seq 1 $MAX_WAIT); do
-    MOUNT_POINT=$(find_mount_point "$UUID")
-    
-    if [ -n "$MOUNT_POINT" ] && [ -d "$MOUNT_POINT" ]; then
+    if [ -d "$MOUNT_POINT" ] && mountpoint -q "$MOUNT_POINT"; then
         echo "$(date): Mount point $MOUNT_POINT found" >> "$LOG_FILE"
         
         # Execute the Python script

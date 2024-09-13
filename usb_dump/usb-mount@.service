@@ -1,0 +1,13 @@
+[Unit]
+Description=Mount USB Drive on %i
+BindsTo=dev-%i.device
+After=dev-%i.device
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/bin/bash -c '/bin/mkdir -p /media/usb-%I && /bin/mount /dev/%I /media/usb-%I'
+ExecStop=/bin/umount /media/usb-%I
+
+[Install]
+WantedBy=multi-user.target

@@ -85,7 +85,7 @@ try:
         
 
 finally:
-    print("PiDAR STOPPED")
+    print("PiLiDAR STOPPED")
     if config.get("ENABLE_LIDAR"):
         lidar.close()
     stepper.close()

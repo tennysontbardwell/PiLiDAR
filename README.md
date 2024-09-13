@@ -1,4 +1,4 @@
-# PiDAR - DIY 360° 3D Panorama Scanner
+# PiLiDAR - DIY 360° 3D Panorama Scanner
 ## _WORK IN PROGRESS_
 
 ## Core Features:
@@ -43,11 +43,11 @@ klick the images to open the pointclouds in Sketchfab.
     - v2: 10.000 mAh USB Powerbank with step-up converter
 
 
-![PiDAR v1](images/pidar_covershot.jpg)
+![PiLiDAR v1](images/pilidar_covershot.jpg)
 *Rev. 1 using 2x 18650 Batteries and Buck Converter*
 
 
-![PiDAR v2](images/pidar_covershot_v2.jpg)
+![PiLiDAR v2](images/pilidar_covershot_v2.jpg)
 *Rev. 2 using 10.000 mAh Powerbank and Boost Converter*
 
 
@@ -86,7 +86,7 @@ Scan duration:
 
 ## wiring
 
-![breadboard version 2](images/pidar_breadboard.jpg)
+![breadboard version 2](images/pilidar_breadboard.jpg)
 *Breadboard Rev. 2*
 
 
@@ -137,19 +137,19 @@ make script executable:
 
 create new service for autostart
 
-    sudo nano /etc/systemd/system/pidar.service
+    sudo nano /etc/systemd/system/pilidar.service
 
 content:
 
     [Unit]
-    Description=PiDAR-Button
+    Description=PiLiDAR-Button
     After=network.target
 
     [Service]
     Type=simple
     User=pi
     Environment=LG_WD=/tmp
-    ExecStart=/usr/bin/python3 /home/pi/Documents/PiDAR/gpio_interrupt.py
+    ExecStart=/usr/bin/python3 /home/pi/PiLiDAR/gpio_interrupt.py
     Restart=no
 
     [Install]
@@ -158,12 +158,12 @@ content:
 reload daemon, enable and start service:
 
     sudo systemctl daemon-reload
-    sudo systemctl enable pidar.service
-    sudo systemctl start pidar.service
+    sudo systemctl enable pilidar.service
+    sudo systemctl start pilidar.service
 
 check service if necessary:
 
-    sudo systemctl status pidar.service
+    sudo systemctl status pilidar.service
 
 
 ### set Permission for UART on Raspberry Pi
@@ -234,7 +234,7 @@ powering Raspberry Pi's USB-3-Ports (Hub 2) off / on
 ### jupyter over remote-ssh 
 start jupyter for network access:
 
-    jupyter notebook --ip 192.168.1.16 --no-browser PiDAR.ipynb
+    jupyter notebook --ip 192.168.1.16 --no-browser PiLiDAR.ipynb
 
 
 ## FDM / 3D printing
@@ -296,18 +296,20 @@ Follow these steps to set up the USB detector system:
 
 1. Copy the udev rule to its target folder:
    ```
-   sudo cp /home/flip/PiLiDAR/99-usb-detector.rules /etc/udev/rules.d/
+   sudo cp /home/pi/PiLiDAR/usb_dump/99-usb-detector.rules /etc/udev/rules.d/
    ```
 
-2. Copy the systemd service template to its target folder:
+2. Copy the systemd services to the service folder:
    ```
-   sudo cp /home/flip/PiLiDAR/usb-detector@.service /etc/systemd/system/
+   sudo cp /home/pi/PiLiDAR/usb_dump/usb-mount@.service /etc/systemd/system/
+
+   sudo cp /home/pi/PiLiDAR/usb_dump/usb-detector@.service /etc/systemd/system/
    ```
 
 3. Make sure the wrapper and Python scripts are executable:
    ```
-   chmod +x /home/flip/PiLiDAR/usb_detector.sh
-   chmod +x /home/flip/PiLiDAR/usb_dump.py
+   chmod +x /home/pi/PiLiDAR/usb_dump/usb_detector.sh
+   chmod +x /home/pi/PiLiDAR/usb_dump/usb_dump.py
    ```
 
 4. Reload udev rules and the systemd daemon:

@@ -72,7 +72,7 @@ def __validate_object_list__(object_list):
         print(e)
 
 
-def visualize(object_list, title="PiDAR", transformation=None, fullscreen=True, size=(1280,720), view="front", point_size=1, 
+def visualize(object_list, title="PiLiDAR", transformation=None, fullscreen=True, size=(1280,720), view="front", point_size=1, 
               unlit=False, backface=True, point_colors="color", bgcolor=(0.15, 0.15, 0.15), enable_fallback=True):
     
     object_list = __validate_object_list__(object_list)

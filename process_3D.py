@@ -69,7 +69,7 @@ if __name__ == "__main__":
     from lib.config import Config
 
     
-    scans_root = None  # "C:/DOKUMENTE/PiDAR/scans"
+    scans_root = None
     scan_id = "240901-0647"  # "240901-0654"
 
     config = Config(scans_root=scans_root)
