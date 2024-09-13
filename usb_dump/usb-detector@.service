@@ -1,0 +1,11 @@
+[Unit]
+Description=USB Detector for device %I
+After=dev-%i.device
+
+[Service]
+Type=simple
+ExecStartPre=/bin/sleep 2
+ExecStart=/home/flip/PiLiDAR/usb_detector.sh %I
+
+[Install]
+WantedBy=multi-user.target
