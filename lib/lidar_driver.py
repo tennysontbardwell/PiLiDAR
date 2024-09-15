@@ -17,10 +17,12 @@ import time
 
 try:
     # running from project root
+    from lib.config import Config, format_value
     from lib.platform_utils import init_serial, init_pwm_Pi  # init_serial_MCU, init_pwm_MCU
     from lib.file_utils import save_data
 except:
     # testing from this file
+    from config import Config, format_value
     from platform_utils import init_serial, init_pwm_Pi  # init_serial_MCU, init_pwm_MCU
     from file_utils import save_data
 
@@ -127,7 +129,7 @@ class Lidar:
         print("Serial connection closed.")
     
 
-    def read_loop(self, callback=None, max_packages=None):
+    def read_loop(self, callback=None, max_packages=None, digits=4):
         loop_count = 0
         if self.visualization is not None:
             # matplotlib close event
@@ -136,7 +138,7 @@ class Lidar:
                 print("Closing...")
 
             self.visualization.fig.canvas.mpl_connect('close_event', on_close)
-
+        
         while self.serial_connection.is_open and (max_packages is None or loop_count <= max_packages):
             try:
                 if self.out_i == self.out_len:
@@ -151,7 +153,7 @@ class Lidar:
                     # SAVE DATA
                     if self.format is not None:
                         if self.z_angle is not None:
-                            fname = f"plane_{round(self.z_angle, 2)}"
+                            fname = f"plane_{format_value(self.z_angle, digits)}"
                         else:
                             # use current timestamp if z_angle is not available
                             fname = f"{time.time()}"
@@ -279,7 +281,6 @@ class Lidar:
 
 
 if __name__ == "__main__":
-    from config import Config
 
     def my_callback():
         # print("speed:", round(lidar.speed, 2))
@@ -298,15 +299,17 @@ if __name__ == "__main__":
         visualization = None
     
     lidar = Lidar(config, visualization=visualization)
+    digits = config.get("ANGULAR_DIGITS")
 
     try:
         if lidar.serial_connection.is_open:
             if visualize:
-                lidar.read_loop(callback=my_callback, max_packages=config.max_packages)
+                lidar.read_loop(callback=my_callback, max_packages=config.max_packages, digits=digits)
             else:
                 read_thread = threading.Thread(target=lidar.read_loop, 
                                                kwargs={'callback': my_callback, 
-                                                       'max_packages': config.max_packages})
+                                                       'max_packages': config.max_packages,
+                                                       'digits': digits})
                 read_thread.start()
                 read_thread.join()
     finally:

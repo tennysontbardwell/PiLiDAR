@@ -3,7 +3,7 @@ import os
 
 from process_3D import process_3D
 
-from lib.config import Config
+from lib.config import Config, format_value
 from lib.lidar_driver import Lidar
 from lib.a4988_driver import A4988
 from lib.rpicam_utils import take_HDR_photo, estimate_camera_parameters
@@ -46,11 +46,11 @@ try:
         # print("[RESULT] AE:", current_exposure_time, "| Gain:", current_gain, "| AWB R:", round(current_awbgains[0],3), "B:", round(current_awbgains[1],3))
 
         IMGCOUNT = config.get("PANO", "IMGCOUNT")
+        DIGITS = config.get("ANGULAR_DIGITS")
         for i in range(IMGCOUNT):
-
             # take HighRes image using fixed values
-            current_angle = round(stepper.get_current_angle(), 2)
-            filename = f"image_{current_angle}.jpg"
+            formatted_angle = format_value(stepper.get_current_angle(), DIGITS)
+            filename = f"image_{formatted_angle}.jpg"
             
             imgpaths = take_HDR_photo(AEB           = config.get("CAM", "AEB"), 
                                       AEB_stops     = config.get("CAM", "AEB_STOPS"),

@@ -178,6 +178,11 @@ class Config:
         GPIO.setup(relay_pin, GPIO.OUT)
 
 
+def format_value(value, digits):
+    formatted_value = f"{round(value, digits):0{4 + digits}.{digits}f}"
+    return formatted_value
+
+
 if __name__ == "__main__":
     config = Config()
     config.init()

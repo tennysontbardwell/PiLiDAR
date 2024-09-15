@@ -3,14 +3,15 @@
     "ENABLE_GPIO_SERIAL": false,
     "ENABLE_CAM": true,
     "ENABLE_PANO": true,
-    "ENABLE_3D": false,
-    "ENABLE_FILTERING": true,
+    "ENABLE_3D": true,
+    "ENABLE_FILTERING": false,
     "ENABLE_VERTEXCOLOUR": true,
     "ENABLE_MESH": true,
     "ENABLE_REGISTRATION": true,
-
+    
     "SCANS_ROOT": "scans",
-
+    "ANGULAR_DIGITS": 4,
+    
     "LIDAR": {
         "DEVICE": "STL27L",
         "STL27L": {
@@ -70,7 +71,7 @@
         "preview_dims": [320, 240],
         "dims": [4056,3040],
         "preview_denoise": "cdn_off",
-        "denoise": "cdn_hq",
+        "denoise": "cdn_fast",
         "awbgains": [1, 1],
         "max_iterations": 10,
         "awb_thres": 0.01,
