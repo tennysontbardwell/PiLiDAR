@@ -2,7 +2,7 @@
     "ENABLE_LIDAR": true,
     "ENABLE_GPIO_SERIAL": false,
     "ENABLE_CAM": true,
-    "ENABLE_PANO": false,
+    "ENABLE_PANO": true,
     "ENABLE_3D": false,
     "ENABLE_FILTERING": true,
     "ENABLE_VERTEXCOLOUR": true,
@@ -77,7 +77,7 @@
         "set_gain": 1,
         "sharpness": 0.5,
         "saturation": 0.8,
-        "AEB": 2,
+        "AEB": 1,
         "AEB_STOPS": 2,
         "raw": false
     },
