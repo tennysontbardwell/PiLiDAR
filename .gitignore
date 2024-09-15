@@ -13,4 +13,7 @@ _old/
 /mechanical_design/Fritzing/parts
 
 # data directory
-/scans/*
+/scans/
+
+# usb_dump
+usb_dump/
