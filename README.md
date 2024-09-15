@@ -295,11 +295,9 @@ Plotly seems to render client-sided, unlike Open3D Web Visualizer which renders 
     git clone https://github.com/LaserBorg/usb_dump
     cd usb_dump && chmod +x install.sh && ./install.sh "$(pwd)"
     ```
-2. Update the json. You can do it from shell if you want:
+2. Create the config file:
     ```
-    sudo apt-get install -y jq
-
-    jq '.source_directories = ["/home/pi/PiLiDAR/scans"] | .target_root_directory = null' usbdump.json > usbdump_temp.json && mv usbdump_temp.json usbdump.json
+    echo '{"source_directories": ["/home/pi/PiLiDAR/scans"], "target_root_directory": null}' > usbdump.json
     ```
 3. Check the log file:
     ```
