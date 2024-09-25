@@ -2,9 +2,9 @@ import os
 import csv
 import re
 import math
-import threading
 import numpy as np
 from glob import glob
+# import threading   # TODO: use for save_raw_scan
 
 
 def modify_path(input_path, insert_string, ext=None):
@@ -19,23 +19,22 @@ def modify_path(input_path, insert_string, ext=None):
     new_path = os.path.join(directory, new_filename)
     return new_path
 
+# def save_data(filepath, np_array):
+#     ext = os.path.splitext(filepath)[1].lstrip('.')
 
-def save_data(filepath, np_array):
-    ext = os.path.splitext(filepath)[1].lstrip('.')
+#     if ext == 'csv':
+#         t = threading.Thread(target=save_csv, args=(filepath, np_array))
+#     else:  # format == 'npy':
+#         t = threading.Thread(target=save_npy, args=(filepath, np_array))
+#     t.start()
 
-    if ext == 'csv':
-        t = threading.Thread(target=save_csv, args=(filepath, np_array))
-    else:  # format == 'npy':
-        t = threading.Thread(target=save_npy, args=(filepath, np_array))
-    t.start()
+# def save_npy(filepath, points_2d):
+#     np.save(filepath, points_2d)
 
 def save_csv(filepath, points_2d, csv_delimiter=','):
     with open(filepath, 'w', newline='') as f:
         writer = csv.writer(f, delimiter=csv_delimiter)
         writer.writerows(points_2d)
-
-def save_npy(filepath, points_2d):
-    np.save(filepath, points_2d)
 
 def csv_from_npy_dir(dir):
     npy_files = list_files(dir, ext='npy')

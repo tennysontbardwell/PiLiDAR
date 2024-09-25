@@ -12,19 +12,17 @@ Speed Control on Raspberry Pi
 
 import numpy as np
 import serial
-import os
-import time
 
 try:
     # running from project root
-    from lib.config import Config, format_value
+    from lib.config import Config, get_scan_dict
     from lib.platform_utils import init_serial, init_pwm_Pi  # init_serial_MCU, init_pwm_MCU
-    from lib.file_utils import save_data
+    from lib.pointcloud import save_raw_scan
 except:
     # testing from this file
-    from config import Config, format_value
+    from config import Config, get_scan_dict
     from platform_utils import init_serial, init_pwm_Pi  # init_serial_MCU, init_pwm_MCU
-    from file_utils import save_data
+    from pointcloud import save_raw_scan
 
 
 class Lidar:
@@ -65,15 +63,17 @@ class Lidar:
         self.angle_package        = np.zeros(self.dlength)
         self.distance_package     = np.zeros(self.dlength)
         self.luminance_package    = np.zeros(self.dlength)
-        # preallocate outputs:
+        # preallocate intermediate outputs:
         self.out_i              = 0
         self.speeds             = np.empty(self.out_len, dtype=self.dtype)
         self.timestamps         = np.empty(self.out_len, dtype=self.dtype)
         self.points_2d          = np.empty((self.out_len * self.dlength, 3), dtype=self.dtype)  # [[x, y, l],[..
-        
-        # file format and visualization
-        self.data_dir           = config.lidar_dir
-        self.format             = config.get("LIDAR", "EXT")
+
+        # raw output
+        self.z_angles           = []
+        self.cartesian          = []
+
+        # visualization
         self.visualization      = visualization
         
 
@@ -127,6 +127,11 @@ class Lidar:
 
         self.serial_connection.close()
         print("Serial connection closed.")
+
+        # Save raw_scan to pickle file
+        raw_scan = get_scan_dict(self.z_angles, cartesian=self.cartesian)
+        save_raw_scan(config.raw_path, raw_scan)
+        print("Raw scan saved.")
     
 
     def read_loop(self, callback=None, max_packages=None, digits=4):
@@ -145,22 +150,14 @@ class Lidar:
                     if callback is not None:
                         callback()
                     
+                    # save the z_angle to list
+                    self.z_angles.append(self.z_angle)
+
                     if self.verbose:
                         print("speed:", round(self.speed, 2))
                         if self.z_angle is not None:
                             print("z_angle:", round(self.z_angle, 2))
                 
-                    # SAVE DATA
-                    if self.format is not None:
-                        if self.z_angle is not None:
-                            fname = f"plane_{format_value(self.z_angle, digits)}"
-                        else:
-                            # use current timestamp if z_angle is not available
-                            fname = f"{time.time()}"
-
-                        filepath = os.path.join(self.data_dir, f"{fname}.{self.format}")
-                        save_data(filepath, self.points_2d)
-
                     # VISUALIZE
                     if self.visualization is not None:
                         self.visualization.update(self.points_2d)
@@ -215,11 +212,14 @@ class Lidar:
         # convert polar to cartesian
         x_package, y_package = self.polar2cartesian(self.angle_package, self.distance_package, self.offset)
         points_package = np.column_stack((x_package, y_package, self.luminance_package)).astype(self.dtype)
-
+        
         # write into preallocated output arrays at current index
         self.speeds[self.out_i] = self.speed
         self.timestamps[self.out_i] = self.timestamp
         self.points_2d[self.out_i*self.dlength:(self.out_i+1)*self.dlength] = points_package
+
+        # Append the points_package to the cartesian list
+        self.cartesian.append(points_package)
 
         # reset byte_array
         self.byte_array = bytearray()

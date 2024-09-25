@@ -131,13 +131,13 @@ class Config:
 
         self.scan_dir           = os.path.join(self.scans_root, self.scan_id)
         self.pano_path          = os.path.join(self.scan_dir, f'{self.scan_id}{self.get("PANO", "OUTPUT_NAME")}')
-        self.pcd_path           = os.path.join(self.scan_dir, f'{self.scan_id}.{self.get("3D", "EXT")}')
+        self.raw_path           = os.path.join(self.scan_dir, f"{self.scan_id}{self.get('LIDAR', 'RAW_NAME')}")
+        self.pcd_path           = os.path.join(self.scan_dir, f'{self.scan_id}.{self.get("3D", "EXT")}')            # .pcd, .ply, .xyz, .xyzrgb
         self.filtered_pcd_path  = os.path.join(self.scan_dir, f'{self.scan_id}_filtered.{self.get("3D", "EXT")}')
 
-        self.lidar_dir = make_dir(os.path.join(self.scan_dir, "lidar"))
         self.img_dir   = make_dir(os.path.join(self.scan_dir, "img"))
         self.tmp_dir   = make_dir(os.path.join(self.scan_dir, "tmp"))
-
+        
         self.imglist = []
 
 
@@ -176,6 +176,25 @@ class Config:
         # power relay
         relay_pin = self.get("STEPPER", "RELAY_PIN")
         GPIO.setup(relay_pin, GPIO.OUT)
+
+
+def get_scan_dict(z_angles, angular=None, cartesian=None, scan_id=None, device_id=None, sensor=None, hardware=None, location=None, author=None):
+    raw_scan = {
+        "header": {
+            # "creation_date": None,
+            # "modification_date": None,
+            "scan_id": scan_id,
+            "device_id": device_id,
+            "sensor": sensor,
+            "hardware": hardware,
+            "location": location,
+            "author": author,
+            },
+        "z_angles": z_angles,
+        "angular": angular,
+        "cartesian": cartesian,
+    }
+    return raw_scan
 
 
 def format_value(value, digits):

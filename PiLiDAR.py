@@ -1,8 +1,7 @@
 from time import sleep
 import os
 
-from process_3D import process_3D
-
+from lib.pointcloud import process_raw
 from lib.config import Config, format_value
 from lib.lidar_driver import Lidar
 from lib.a4988_driver import A4988
@@ -92,7 +91,7 @@ finally:
 
     # 3D PROCESSING
     if config.get("ENABLE_3D"):
-        pcd = process_3D(config)
+        pcd = process_raw(config, save=True)
 
     ## Relay Power off
     # GPIO.output(RELAY_PIN, 0)

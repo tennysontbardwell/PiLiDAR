@@ -98,8 +98,9 @@ def visualize(object_list, title="PiLiDAR", transformation=None, fullscreen=True
         object_list = copy.deepcopy(object_list)
 
     if transformation is not None:
-        for i, object in enumerate(object_list):
-            object_list[i] = transform(object, transformation=transformation)
+        # for i, object in enumerate(object_list):
+        #     object_list[i] = transform(object, transformation=transformation)
+        object_list[0] = transform(object_list[0], transformation=transformation)  # only transform the first object
     
     if uniform_colors:
         object_list = copy.deepcopy(object_list)

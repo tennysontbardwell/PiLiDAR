@@ -40,7 +40,7 @@
         "LIDAR_OFFSET_ANGLE": -1.05,
         "TARGET_RES": "1/6",
         "TARGET_SPEED": 10,
-        "EXT": "npy",
+        "RAW_NAME": "_lidar.pkl",
         "protocol": {
             "start_byte": "54",
             "dlength_byte": "2c",
