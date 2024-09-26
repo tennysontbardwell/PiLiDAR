@@ -3,7 +3,7 @@ import os
 
 from lib.visualization import visualize
 from lib.pointcloud import process_raw, load_raw_scan
-from lib.config import Config  #, get_scan_dict
+from lib.config import Config, get_scan_dict
 
 
 def get_cartesian_list(filepaths):
@@ -34,18 +34,18 @@ if __name__ == "__main__":
         raw_scan = load_raw_scan(config.raw_path)
 
         print("keys:", raw_scan.keys()) 
-        print(f"{len(raw_scan['cartesian'])} planes (min: {min(raw_scan['z_angles'])}, max: {max(raw_scan['z_angles'])}, shape: {raw_scan['cartesian'][0].shape}")
+        #print(f"{len(raw_scan['cartesian'])} planes (min: {min(raw_scan['z_angles'])}, max: {max(raw_scan['z_angles'])}, shape: {raw_scan['cartesian'][0].shape}")
 
-    # else:
-    #     from lib.file_utils import angles_from_filenames
-    #     from lib.pointcloud import save_raw_scan
+    else:
+        from lib.file_utils import angles_from_filenames
+        from lib.pointcloud import save_raw_scan
 
-    #     filepaths, z_angles = angles_from_filenames(f"{config.scan_id}/lidar", name="plane", ext="npy")
-    #     print(f"{len(filepaths)} files found (min: {min(z_angles)}, max: {max(z_angles)}).")
+        filepaths, z_angles = angles_from_filenames(f"{config.scan_id}/lidar", name="plane", ext="npy")
+        print(f"{len(filepaths)} files found (min: {min(z_angles)}, max: {max(z_angles)}).")
 
-    #     cartesian = get_cartesian_list(filepaths)
-    #     raw_scan = get_scan_dict(z_angles, cartesian)
-    #     save_raw_scan(config.raw_path, raw_scan)   
+        cartesian = get_cartesian_list(filepaths)
+        raw_scan = get_scan_dict(z_angles, cartesian)
+        save_raw_scan(config.raw_path, raw_scan)   
 
 
     # MAIN FUNCTION: convert 2D numpy arrays to 3D pointcloud

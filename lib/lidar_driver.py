@@ -12,18 +12,22 @@ Speed Control on Raspberry Pi
 
 import numpy as np
 import serial
+import os
+import time
 
 # running from project root
 try:
-    from lib.config import Config, get_scan_dict
+    from lib.config import Config, get_scan_dict, format_value
     from lib.pointcloud import save_raw_scan
     from lib.platform_utils import init_serial, init_pwm_Pi  # init_serial_MCU, init_pwm_MCU
+    from lib.file_utils import save_data
 
 # testing from this file
 except:
-    from config import Config, get_scan_dict
+    from config import Config, get_scan_dict, format_value
     from pointcloud import save_raw_scan
     from platform_utils import init_serial, init_pwm_Pi  # init_serial_MCU, init_pwm_MCU
+    from file_utils import save_data
 
 
 class Lidar:
@@ -70,6 +74,9 @@ class Lidar:
         self.speeds             = np.empty(self.out_len, dtype=self.dtype)
         self.timestamps         = np.empty(self.out_len, dtype=self.dtype)
         self.points_2d          = np.empty((self.out_len * self.dlength, 3), dtype=self.dtype)  # [[x, y, l],[..
+
+        
+        self.data_dir           = config.lidar_dir  # DEBUG
 
         # raw output
         self.z_angles           = []
@@ -155,7 +162,18 @@ class Lidar:
                         if self.z_angle is not None:
                             print("z_angle:", round(self.z_angle, 2))
 
-                    # Append the 2D plane to the cartesian list
+
+                    # DEBUG: SAVE INDIVIDUAL NPY FILES
+                    if self.z_angle is not None:
+                        fname = f"plane_{format_value(self.z_angle, digits)}"
+                    else:
+                        # use current timestamp if z_angle is not available
+                        fname = f"{time.time()}"
+                    filepath = os.path.join(self.data_dir, f"{fname}.npy")
+                    save_data(filepath, self.points_2d)
+
+
+                    # NEW: Append the 2D plane to the cartesian list
                     self.cartesian.append(self.points_2d)
 
                     # VISUALIZE

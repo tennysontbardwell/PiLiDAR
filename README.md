@@ -320,6 +320,10 @@ Plotly seems to render client-sided, unlike Open3D Web Visualizer which renders 
 
 ## Troubleshooting
 
+### Windows Serial Driver
+get [CP210x_Universal_Windows_Driver.zip](https://files.waveshare.com/upload/6/63/CP210x_Universal_Windows_Driver.zip) here:  
+https://www.waveshare.com/wiki/DTOF_LIDAR_STL27L#Software_Download
+
 ### RPi.GPIO RuntimeError: Failed to add edge detection
 current bookworm version has deprecated sysfs GPIO interface removed.  
 use [LGPIO](https://pypi.org/project/rpi-lgpio/) as described [here](https://raspberrypi.stackexchange.com/questions/147332/rpi-gpio-runtimeerror-failed-to-add-edge-detection):

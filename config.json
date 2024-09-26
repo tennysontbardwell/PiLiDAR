@@ -15,7 +15,7 @@
     "LIDAR": {
         "DEVICE": "STL27L",
         "STL27L": {
-            "PORT_WIN": "COM6",
+            "PORT_WIN": "COM3",
             "PORT": "/dev/ttyUSB0",
             "BAUDRATE": 921600,
             "SAMPLING_RATE": 21600,
