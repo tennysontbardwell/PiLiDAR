@@ -13,16 +13,17 @@ Speed Control on Raspberry Pi
 import numpy as np
 import serial
 
+# running from project root
 try:
-    # running from project root
     from lib.config import Config, get_scan_dict
-    from lib.platform_utils import init_serial, init_pwm_Pi  # init_serial_MCU, init_pwm_MCU
     from lib.pointcloud import save_raw_scan
+    from lib.platform_utils import init_serial, init_pwm_Pi  # init_serial_MCU, init_pwm_MCU
+
+# testing from this file
 except:
-    # testing from this file
     from config import Config, get_scan_dict
-    from platform_utils import init_serial, init_pwm_Pi  # init_serial_MCU, init_pwm_MCU
     from pointcloud import save_raw_scan
+    from platform_utils import init_serial, init_pwm_Pi  # init_serial_MCU, init_pwm_MCU
 
 
 class Lidar:
@@ -30,6 +31,7 @@ class Lidar:
         
         self.verbose            = False
         self.sampling_rate      = config.get("LIDAR", config.DEVICE, "SAMPLING_RATE")
+        self.raw_path           = config.raw_path
 
         self.z_angle            = None  # gets updated externally by A4988 driver
 
@@ -127,11 +129,6 @@ class Lidar:
 
         self.serial_connection.close()
         print("Serial connection closed.")
-
-        # Save raw_scan to pickle file
-        raw_scan = get_scan_dict(self.z_angles, cartesian=self.cartesian)
-        save_raw_scan(config.raw_path, raw_scan)
-        print("Raw scan saved.")
     
 
     def read_loop(self, callback=None, max_packages=None, digits=4):
@@ -157,7 +154,10 @@ class Lidar:
                         print("speed:", round(self.speed, 2))
                         if self.z_angle is not None:
                             print("z_angle:", round(self.z_angle, 2))
-                
+
+                    # Append the 2D plane to the cartesian list
+                    self.cartesian.append(self.points_2d)
+
                     # VISUALIZE
                     if self.visualization is not None:
                         self.visualization.update(self.points_2d)
@@ -217,9 +217,6 @@ class Lidar:
         self.speeds[self.out_i] = self.speed
         self.timestamps[self.out_i] = self.timestamp
         self.points_2d[self.out_i*self.dlength:(self.out_i+1)*self.dlength] = points_package
-
-        # Append the points_package to the cartesian list
-        self.cartesian.append(points_package)
 
         # reset byte_array
         self.byte_array = bytearray()
@@ -314,4 +311,10 @@ if __name__ == "__main__":
                 read_thread.join()
     finally:
         print("speed:", round(lidar.speed, 2))
+
+        # Save raw_scan to pickle file
+        raw_scan = get_scan_dict(lidar.z_angles, cartesian=lidar.cartesian)
+        save_raw_scan(lidar.raw_path, raw_scan)
+        print("Raw scan saved.")
+
         lidar.close()

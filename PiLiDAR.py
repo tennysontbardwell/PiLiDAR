@@ -1,8 +1,8 @@
 from time import sleep
 import os
 
-from lib.pointcloud import process_raw
-from lib.config import Config, format_value
+from lib.pointcloud import process_raw, save_raw_scan
+from lib.config import Config, format_value, get_scan_dict
 from lib.lidar_driver import Lidar
 from lib.a4988_driver import A4988
 from lib.rpicam_utils import take_HDR_photo, estimate_camera_parameters
@@ -78,7 +78,12 @@ try:
                         max_packages=config.max_packages)
         
         stepper.move_to_angle(0)   # return to 0°
+
+        # Save raw_scan to pickle file
+        raw_scan = get_scan_dict(lidar.z_angles, cartesian=lidar.cartesian)
+        save_raw_scan(lidar.raw_path, raw_scan)
     
+
     # STITCHING PROCESS (NON-BLOCKING)
     project_path = hugin_stitch(config)
         
@@ -89,10 +94,13 @@ finally:
         lidar.close()
     stepper.close()
 
-    # 3D PROCESSING
-    if config.get("ENABLE_3D"):
-        pcd = process_raw(config, save=True)
-
     ## Relay Power off
     # GPIO.output(RELAY_PIN, 0)
     # GPIO.cleanup(RELAY_PIN)
+
+
+# 3D PROCESSING
+if config.get("ENABLE_3D"):
+    print("processing 3D planes...")
+    pcd = process_raw(config, raw_scan, save=True)
+    print("processing 3D completed.")
