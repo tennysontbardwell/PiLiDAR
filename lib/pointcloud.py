@@ -9,7 +9,7 @@ import os
 from scipy.spatial.transform import Rotation as R
 import pickle
 
-try:
+try:  # TODO remove -> npy files replaced by single pkl file
     from lib.file_utils import angles_from_filenames
 except:
     from file_utils import angles_from_filenames
@@ -61,7 +61,7 @@ def process_raw(config, save=True):
 
 
         # ANGULAR LOOKUP ("TEXTURING")
-        if config.get("ENABLE_VERTEXCOLOUR"):
+        if config.get("ENABLE_VERTEXCOLOUR") and os.path.exists(config.pano_path):
             colors = angular_lookup(angular_from_cartesian(np.asarray(pcd.points)),  # angular_points
                                     cv2.imread(config.pano_path),  # pano
                                     scale=config.get("VERTEXCOLOUR","SCALE"), 
@@ -90,40 +90,39 @@ def process_raw(config, save=True):
 
         return pcd
 
-
+    # load raw data dict from pickle file
     if os.path.exists(config.raw_path):
-        # load raw scan from file
-        print("lidar.pkl file found:", config.raw_path)
+        # print("lidar.pkl file found:", config.raw_path)
         raw_scan = load_raw_scan(config.raw_path)
         array_3D = merge_2D_points(raw_scan, 
                         position_offset=(0, config.get("3D","Y_OFFSET"), 0),     # Y offset in mm
                         angle_offset=config.get("LIDAR","LIDAR_OFFSET_ANGLE"),   # small lidar rotation fix
                         up_vector=(0,0,1)) 
 
-    else:
+    else:  # TODO remove -> npy files replaced by single pkl file
         print("lidar.pkl file not found!")
-    #     filepaths, z_angles = angles_from_filenames(config.lidar_dir, name="plane", ext="npy")
-    #     print(f"{len(filepaths)} files found (min: {min(z_angles)}, max: {max(z_angles)}).")
+        filepaths, z_angles = angles_from_filenames(config.lidar_dir, name="plane", ext="npy")
+        print(f"{len(filepaths)} files found (min: {min(z_angles)}, max: {max(z_angles)}).")
 
-    #     print("processing 3D planes...")
-    #     cartesian_list = get_cartesian_list(filepaths)
+        print("processing 3D planes...")
+        cartesian_list = get_cartesian_list(filepaths)
 
-    #     raw_scan = get_scan_dict(z_angles, cartesian_list=cartesian_list)
-    #     if save:
-    #         save_raw_scan(config.raw_path, raw_scan)
+        raw_scan = get_scan_dict(z_angles, cartesian_list=cartesian_list)
+        if save:
+            save_raw_scan(config.raw_path, raw_scan)
 
-    #     array_3D = merge_2D_points(raw_scan, 
-    #                             position_offset=(0, config.get("3D","Y_OFFSET"), 0),     # Y offset in mm
-    #                             angle_offset=config.get("LIDAR","LIDAR_OFFSET_ANGLE"),   # small lidar rotation fix
-    #                             up_vector=(0,0,1)) 
+        array_3D = merge_2D_points(raw_scan, 
+                                position_offset=(0, config.get("3D","Y_OFFSET"), 0),     # Y offset in mm
+                                angle_offset=config.get("LIDAR","LIDAR_OFFSET_ANGLE"),   # small lidar rotation fix
+                                up_vector=(0,0,1)) 
 
 
 
     normal_radius = config.get("3D","NORMAL_RADIUS")  # radius for normal estimation in mm
     pcd = pcd_from_np(array_3D, estimate_normals=True, max_nn=50, radius=normal_radius)
-    print("merge completed.")
+    print("2D->3D merge completed.")
 
-    pcd = postprocess_3D(config, pcd, save=True)
+    pcd = postprocess_3D(config, pcd, save=save)
     print("processing 3D completed.")
     return pcd
 
@@ -591,7 +590,7 @@ def angular_lookup(angular_points, pano, scale=1, degrees=False, z_rotate=0, as_
 
 if __name__ == "__main__":
     '''
-    generate lidar_panorama and PCD from raw data
+    generate lidar_panorama from raw data
     '''
 
     from config import Config
@@ -604,9 +603,8 @@ if __name__ == "__main__":
     config.set(False, "ENABLE_VERTEXCOLOUR")
 
     pano = cv2.imread(config.pano_path)
-    raw_scan = load_raw_scan(config.raw_path)
 
-    pcd = process_raw(config, save=False)
+    pcd = load_pointcloud(config.pcd_path)
 
     # CREATE PANORAMA FROM LUMINANCE
     lidar_pano = get_lidar_pano(pcd, image_width=2048, image_height=1024)

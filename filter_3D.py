@@ -1,8 +1,7 @@
-import open3d as o3d
-
 from lib.pointcloud import load_pointcloud, downsample, filter_outliers, filter_by_reference, save_pointcloud_threaded, print_stats
 from lib.visualization import visualize
 from lib.config import Config
+
 
 if __name__ == '__main__':
 

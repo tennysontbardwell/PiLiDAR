@@ -5,7 +5,7 @@ from lib.pointcloud import process_raw
 
 if __name__ == "__main__":
 
-    scan_id = "240824-1230"  # "240927-0040"
+    scan_id = "240824-1230"
 
     config = Config()
     config.init(scan_id=scan_id)
@@ -16,7 +16,7 @@ if __name__ == "__main__":
     config.set(True, "ENABLE_VERTEXCOLOUR")
     config.set(False, "ENABLE_FILTERING")
 
-    # PROCESS 3D
+    # PROCESS RAW DATA FROM PKL FILE
     pcd = process_raw(config, save=True)
 
     # VISUALIZATION

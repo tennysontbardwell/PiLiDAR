@@ -135,7 +135,8 @@ class Config:
         self.pcd_path           = os.path.join(self.scan_dir, f'{self.scan_id}.{self.get("3D", "EXT")}')            # .pcd, .ply, .xyz, .xyzrgb
         self.filtered_pcd_path  = os.path.join(self.scan_dir, f'{self.scan_id}_filtered.{self.get("3D", "EXT")}')
 
-        #self.lidar_dir = make_dir(os.path.join(self.scan_dir, "lidar"))  # TODO remove -> npy files replaced by single pkl file
+        self.lidar_dir = os.path.join(self.scan_dir, "lidar")         # TODO remove -> npy files replaced by single pkl file
+        
         self.img_dir   = make_dir(os.path.join(self.scan_dir, "img"))
         self.tmp_dir   = make_dir(os.path.join(self.scan_dir, "tmp"))
         

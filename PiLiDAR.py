@@ -1,10 +1,10 @@
 from time import sleep
 import os
 
-from lib.pointcloud import process_raw, save_raw_scan, get_scan_dict
-from lib.config import Config, format_value
 from lib.lidar_driver import Lidar
 from lib.a4988_driver import A4988
+from lib.config import Config, format_value
+from lib.pointcloud import process_raw, save_raw_scan, get_scan_dict
 from lib.rpicam_utils import take_HDR_photo, estimate_camera_parameters
 from lib.pano_utils import hugin_stitch
 
@@ -45,15 +45,14 @@ try:
         # print("[RESULT] AE:", current_exposure_time, "| Gain:", current_gain, "| AWB R:", round(current_awbgains[0],3), "B:", round(current_awbgains[1],3))
 
         IMGCOUNT = config.get("PANO", "IMGCOUNT")
-        DIGITS = config.get("ANGULAR_DIGITS")
         for i in range(IMGCOUNT):
             # take HighRes image using fixed values
-            formatted_angle = format_value(stepper.get_current_angle(), DIGITS)
-            filename = f"image_{formatted_angle}.jpg"
+            formatted_angle = format_value(stepper.get_current_angle(), config.get("ANGULAR_DIGITS"))
+            imgpath = os.path.join(config.img_dir, f"image_{formatted_angle}.jpg")
             
             imgpaths = take_HDR_photo(AEB           = config.get("CAM", "AEB"), 
                                       AEB_stops     = config.get("CAM", "AEB_STOPS"),
-                                      path          = os.path.join(config.img_dir, filename), 
+                                      path          = imgpath, 
                                       exposure_time = current_exposure_time, 
                                       gain          = current_gain, 
                                       awbgains      = current_awbgains, 
@@ -80,12 +79,13 @@ try:
         stepper.move_to_angle(0)   # return to 0°
 
         # Save raw_scan to pickle file
-        raw_scan = get_scan_dict(lidar.z_angles, cartesian=lidar.cartesian)
+        raw_scan = get_scan_dict(lidar.z_angles, cartesian_list=lidar.cartesian_list)
         save_raw_scan(lidar.raw_path, raw_scan)
     
 
     # STITCHING PROCESS (NON-BLOCKING)
-    project_path = hugin_stitch(config)
+    if config.get("ENABLE_CAM"): # always create the hugin project when photos are taken
+        project_path = hugin_stitch(config)
         
 
 finally:
@@ -101,6 +101,4 @@ finally:
 
 # 3D PROCESSING
 if config.get("ENABLE_3D"):
-    print("processing 3D planes...")
-    pcd = process_raw(config, save=True)  # loading pkl from config.raw_path from file
-    print("processing 3D completed.")
+    pcd = process_raw(config, save=True)  # loading pkl from config.raw_path

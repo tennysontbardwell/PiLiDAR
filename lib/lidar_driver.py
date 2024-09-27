@@ -17,17 +17,19 @@ import time
 
 # running from project root
 try:
-    from lib.config import Config, get_scan_dict, format_value
-    from lib.pointcloud import save_raw_scan
+    from lib.config import Config
+    from lib.pointcloud import save_raw_scan, get_scan_dict
     from lib.platform_utils import init_serial, init_pwm_Pi  # init_serial_MCU, init_pwm_MCU
     from lib.file_utils import save_data
+    from lib.config import format_value
 
 # testing from this file
 except:
-    from config import Config, get_scan_dict, format_value
-    from pointcloud import save_raw_scan
+    from config import Config
+    from pointcloud import save_raw_scan, get_scan_dict
     from platform_utils import init_serial, init_pwm_Pi  # init_serial_MCU, init_pwm_MCU
     from file_utils import save_data
+    from config import format_value
 
 
 class Lidar:
@@ -80,7 +82,7 @@ class Lidar:
 
         # raw output
         self.z_angles           = []
-        self.cartesian          = []
+        self.cartesian_list     = []
 
         # visualization
         self.visualization      = visualization
@@ -163,7 +165,7 @@ class Lidar:
                             print("z_angle:", round(self.z_angle, 2))
 
 
-                    # # TODO: remove
+                    # # TODO remove -> npy files replaced by single pkl file
                     # # SAVE INDIVIDUAL NPY FILES
                     # if self.z_angle is not None:
                     #     fname = f"plane_{format_value(self.z_angle, digits)}"
@@ -174,8 +176,8 @@ class Lidar:
                     # save_data(filepath, self.points_2d)
 
 
-                    # NEW: Append the 2D plane to the cartesian list
-                    self.cartesian.append(self.points_2d)
+                    # Append 2D plane to cartesian list. copying avoids identical pointers
+                    self.cartesian_list.append(np.copy(self.points_2d))
 
                     # VISUALIZE
                     if self.visualization is not None:
@@ -332,7 +334,7 @@ if __name__ == "__main__":
         print("speed:", round(lidar.speed, 2))
 
         # Save raw_scan to pickle file
-        raw_scan = get_scan_dict(lidar.z_angles, cartesian=lidar.cartesian)
+        raw_scan = get_scan_dict(lidar.z_angles, cartesian_list=lidar.cartesian_list)
         save_raw_scan(lidar.raw_path, raw_scan)
         print("Raw scan saved.")
 

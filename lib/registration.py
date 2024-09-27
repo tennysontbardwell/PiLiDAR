@@ -13,19 +13,11 @@ Colored registration
 https://www.open3d.org/docs/release/tutorial/pipelines/colored_pointcloud_registration.html
 '''
 
-import numpy as np
 import open3d as o3d
 import time
 
-
-# INPUT
-def prepare_dataset():
-    demo_icp_pcds = o3d.data.DemoICPPointClouds()
-    source = o3d.io.read_point_cloud(demo_icp_pcds.paths[0])
-    target = o3d.io.read_point_cloud(demo_icp_pcds.paths[1])
-    trans_init = np.asarray([[0.0, 0.0, 1.0, 0.0], [1.0, 0.0, 0.0, 0.0], [0.0, 1.0, 0.0, 0.0], [0.0, 0.0, 0.0, 1.0]])
-    source.transform(trans_init)
-    return source, target
+from platform_utils import get_platform
+platform = get_platform()
 
 
 # Global Registration using RANSAC
@@ -113,14 +105,26 @@ def color_icp(source, target, transform, normals_nn=30):
 
 
 if __name__ == "__main__":
+    import numpy as np
     from pointcloud import save_pointcloud, get_transform_vectors, transform, estimate_point_normals
     from visualization import visualize
+
+
+    def prepare_dataset():
+        demo_icp_pcds = o3d.data.DemoICPPointClouds()
+        source = o3d.io.read_point_cloud(demo_icp_pcds.paths[0])
+        target = o3d.io.read_point_cloud(demo_icp_pcds.paths[1])
+        trans_init = np.asarray([[0.0, 0.0, 1.0, 0.0], [1.0, 0.0, 0.0, 0.0], [0.0, 1.0, 0.0, 0.0], [0.0, 0.0, 0.0, 1.0]])
+        source.transform(trans_init)
+        return source, target
+
 
     view={"zoom": 0.5, "front": (0, 0, -1), "lookat": (2, 2, 1.5), "up": (0, -1, 0)}
     point_size = 3
 
     source, target = prepare_dataset()
-    visualize([source, target], point_colors="uniform", view=view, point_size=point_size)
+    if platform == 'Windows':
+        visualize([source, target], point_colors="uniform", view=view, point_size=point_size)
 
 
     # ------------------------------------------------
@@ -132,7 +136,9 @@ if __name__ == "__main__":
     start = time.time()
     reg_gr = global_registration(source, target, voxel_size, fast=fast_gr)
     print("GR duration:", time.time() - start)
-    visualize([source, target], transformation=reg_gr.transformation, point_colors="uniform", view=view, point_size=point_size)
+    
+    if platform == 'Windows':
+        visualize([source, target], transformation=reg_gr.transformation, point_colors="uniform", view=view, point_size=point_size)
 
 
     ransac_translation, ransac_euler = get_transform_vectors(reg_gr.transformation)
@@ -152,7 +158,9 @@ if __name__ == "__main__":
     print("ICP duration:", time.time() - start)
 
     print("ICP:", reg_icp)
-    visualize([source, target], transformation=reg_icp.transformation, point_colors="uniform", view=view, point_size=point_size)
+    
+    if platform == 'Windows':
+        visualize([source, target], transformation=reg_icp.transformation, point_colors="uniform", view=view, point_size=point_size)
 
     
     # EXPORT TRANSFORMED POINT CLOUDS
@@ -162,9 +170,11 @@ if __name__ == "__main__":
 
     # ------------------------------------------------
     # COLORED POINT CLOUD REGISTRATION
-
-    visualize([source, target], view=view, transformation=reg_gr.transformation, point_size=point_size)
+    if platform == 'Windows':
+        visualize([source, target], view=view, transformation=reg_gr.transformation, point_size=point_size)
     
     reg_color = color_icp(source, target,reg_gr.transformation)
     #print(result_icp)
-    visualize([source, target], transformation=reg_color.transformation, view=view, point_size=point_size)
+    
+    if platform == 'Windows':
+        visualize([source, target], transformation=reg_color.transformation, view=view, point_size=point_size)
