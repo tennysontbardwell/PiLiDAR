@@ -1,8 +1,8 @@
 from time import sleep
 import os
 
-from lib.pointcloud import process_raw, save_raw_scan
-from lib.config import Config, format_value, get_scan_dict
+from lib.pointcloud import process_raw, save_raw_scan, get_scan_dict
+from lib.config import Config, format_value
 from lib.lidar_driver import Lidar
 from lib.a4988_driver import A4988
 from lib.rpicam_utils import take_HDR_photo, estimate_camera_parameters
@@ -102,5 +102,5 @@ finally:
 # 3D PROCESSING
 if config.get("ENABLE_3D"):
     print("processing 3D planes...")
-    pcd = process_raw(config, raw_scan, save=True)
+    pcd = process_raw(config, save=True)  # loading pkl from config.raw_path from file
     print("processing 3D completed.")

@@ -76,7 +76,7 @@ class Lidar:
         self.points_2d          = np.empty((self.out_len * self.dlength, 3), dtype=self.dtype)  # [[x, y, l],[..
 
         
-        self.data_dir           = config.lidar_dir  # DEBUG
+        # self.data_dir           = config.lidar_dir  # TODO remove -> npy files replaced by single pkl file
 
         # raw output
         self.z_angles           = []
@@ -163,14 +163,15 @@ class Lidar:
                             print("z_angle:", round(self.z_angle, 2))
 
 
-                    # DEBUG: SAVE INDIVIDUAL NPY FILES
-                    if self.z_angle is not None:
-                        fname = f"plane_{format_value(self.z_angle, digits)}"
-                    else:
-                        # use current timestamp if z_angle is not available
-                        fname = f"{time.time()}"
-                    filepath = os.path.join(self.data_dir, f"{fname}.npy")
-                    save_data(filepath, self.points_2d)
+                    # # TODO: remove
+                    # # SAVE INDIVIDUAL NPY FILES
+                    # if self.z_angle is not None:
+                    #     fname = f"plane_{format_value(self.z_angle, digits)}"
+                    # else:
+                    #     # use current timestamp if z_angle is not available
+                    #     fname = f"{time.time()}"
+                    # filepath = os.path.join(self.data_dir, f"{fname}.npy")
+                    # save_data(filepath, self.points_2d)
 
 
                     # NEW: Append the 2D plane to the cartesian list
