@@ -85,7 +85,7 @@ class Config:
         elif self.platform == 'Windows':
             self.PORT = self.get("LIDAR", self.DEVICE , "PORT_WIN")
             # disable GPIO-serial settings
-            self.set(False, "ENABLE_GPIO_SERIAL")
+            self.set(False, "LIDAR", "GPIO_SERIAL", "ENABLE")
         
 
         # STEPPER

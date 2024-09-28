@@ -1,13 +1,15 @@
 {
     "ENABLE_LIDAR": true,
-    "ENABLE_GPIO_SERIAL": false,
     "ENABLE_CAM": true,
-    "ENABLE_PANO": true,
-    "ENABLE_3D": true,
+
+    "ENABLE_PANO": false,
+    "ENABLE_3D": false,
+
     "ENABLE_FILTERING": false,
     "ENABLE_VERTEXCOLOUR": true,
-    "ENABLE_MESH": true,
+
     "ENABLE_REGISTRATION": true,
+    "ENABLE_MESH": true,
     
     "SCANS_ROOT": "scans",
     "ANGULAR_DIGITS": 4,
@@ -33,6 +35,7 @@
             "PWM_COEFFS": [33.3174, -0.8497]
         },
         "GPIO_SERIAL": {
+            "ENABLE": false,
             "PORT": "/dev/ttyS0",
             "PWM_CHANNEL": 0,
             "PWM_FREQ": 30000

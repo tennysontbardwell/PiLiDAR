@@ -88,7 +88,7 @@ class Lidar:
         self.visualization      = visualization
         
 
-        if config.get("ENABLE_GPIO_SERIAL"):
+        if config.get("LIDAR", "GPIO_SERIAL", "ENABLE"):
             pwm_channel         = config.get("LIDAR", "GPIO_SERIAL", "PWM_CHANNEL")
             pwm_freq            = config.get("LIDAR", "GPIO_SERIAL", "PWM_FREQ")
             self.pwm            = init_pwm_Pi(pwm_channel, frequency = pwm_freq)
