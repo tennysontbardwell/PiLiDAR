@@ -5,14 +5,11 @@
     "ENABLE_PANO": false,
     "ENABLE_3D": false,
 
-    "ENABLE_FILTERING": false,
     "ENABLE_VERTEXCOLOUR": true,
-
-    "ENABLE_REGISTRATION": true,
-    "ENABLE_MESH": true,
+    "ENABLE_FILTERING": false,
     
     "SCANS_ROOT": "scans",
-    "ANGULAR_DIGITS": 4,
+    "ANGULAR_DIGITS": 3,
     
     "LIDAR": {
         "DEVICE": "STL27L",
@@ -83,7 +80,8 @@
         "saturation": 0.8,
         "AEB": 1,
         "AEB_STOPS": 2,
-        "raw": false
+        "raw": false,
+        "remove_tmp": false
     },
 
     "PANO": {

@@ -16,7 +16,13 @@ https://www.open3d.org/docs/release/tutorial/pipelines/colored_pointcloud_regist
 import open3d as o3d
 import time
 
-from platform_utils import get_platform
+try:
+    from lib.pointcloud import estimate_point_normals
+    from lib.platform_utils import get_platform
+except:
+    from pointcloud import estimate_point_normals
+    from platform_utils import get_platform
+
 platform = get_platform()
 
 
@@ -106,7 +112,7 @@ def color_icp(source, target, transform, normals_nn=30):
 
 if __name__ == "__main__":
     import numpy as np
-    from pointcloud import save_pointcloud, get_transform_vectors, transform, estimate_point_normals
+    from pointcloud import save_pointcloud, get_transform_vectors, transform
     from visualization import visualize
 
 

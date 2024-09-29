@@ -8,7 +8,7 @@ https://www.arducam.com/sony/imx477/
 import os
 import subprocess
 import cv2
-from time import time
+import shutil
 import exifread
 
 
@@ -203,6 +203,10 @@ def estimate_camera_parameters(config):
     else:
         gain = exif_auto.gain
         exposure_time = exif_auto.exposure_time
+
+    # remove temp directory
+    if config.get("CAM", "remove_tmp"):
+        shutil.rmtree(config.tmp_dir)
 
     return exposure_time, gain, awbgains
 
