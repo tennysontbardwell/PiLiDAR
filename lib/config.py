@@ -128,8 +128,9 @@ class Config:
             self.scan_id = scan_id
         else:
             self.scan_id = datetime.datetime.now().strftime("%y%m%d-%H%M")
-
+        
         self.scan_dir           = os.path.join(self.scans_root, self.scan_id)
+        self.pto_path           = os.path.join(self.scan_dir, f'{self.scan_id}.pto')
         self.pano_path          = os.path.join(self.scan_dir, f'{self.scan_id}{self.get("PANO", "OUTPUT_NAME")}')
         self.raw_path           = os.path.join(self.scan_dir, f"{self.scan_id}{self.get('LIDAR', 'RAW_NAME')}")
         self.pcd_path           = os.path.join(self.scan_dir, f'{self.scan_id}.{self.get("3D", "EXT")}')            # .pcd, .ply, .xyz, .xyzrgb

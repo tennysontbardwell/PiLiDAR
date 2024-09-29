@@ -19,13 +19,12 @@ additional parameters:
 import math
 import numpy as np
 import subprocess
-import shutil
 import os
 
 
-def hugin_modify(project_path, new_project_path, width=6800):
-    # Load the project file(project_path)
-    with open(project_path, 'r') as file:
+def hugin_modify(pto_path, new_project_path, width=6800):
+    # Load the project file(pto_path)
+    with open(pto_path, 'r') as file:
         lines = file.readlines()
 
     # search for first line that starts with 'p ' -> 'p f2 w6000 h3000 v360 ...'
@@ -48,28 +47,22 @@ def hugin_modify(project_path, new_project_path, width=6800):
         file.writelines(lines)
 
 
-def hugin_stitch(config, nice=19, cleanup=False):
-
-    files = config.imglist
-    scan_id = config.scan_id
-    scan_dir = config.scan_dir
-    tmp_dir = config.tmp_dir
-
-    project_path = os.path.join(tmp_dir,  scan_id + ".pto")
-    output_path  = os.path.join(scan_dir, scan_id + ".jpg")
+def hugin_stitch(config, nice=19):
+    pto_path = config.pto_path
+    output_path  = os.path.join(config.scan_dir, f'{config.scan_id}.jpg')
 
     # create Hugin project
-    subprocess.run(['pto_gen', '--projection=2', '--fov=360', '-o', project_path, *files])  # *files -> unpack list
+    subprocess.run(['pto_gen', '--projection=2', '--fov=360', '-o', pto_path, *config.imglist])  # *list -> unpack
     
     # apply template
-    subprocess.run(['pto_template', f'--output={project_path}', f'--template={config.template_path}', project_path])
+    subprocess.run(['pto_template', f'--output={pto_path}', f'--template={config.template_path}', pto_path])
 
     # modify resolution of the temporary project file
-    hugin_modify(project_path, project_path, width=config.get("PANO", "PANO_WIDTH"))
+    hugin_modify(pto_path, pto_path, width=config.get("PANO", "PANO_WIDTH"))
 
     # start stitching as non-blocking thread with low priority
     if config.get("ENABLE_PANO"):
-        cmd_string = ['nice', '-n', str(nice), 'hugin_executor', '--stitching', f'--prefix={output_path}', project_path]
+        cmd_string = ['nice', '-n', str(nice), 'hugin_executor', '--stitching', f'--prefix={output_path}', pto_path]
         process = subprocess.Popen(cmd_string)
 
         # Wait for the process to finish
@@ -79,47 +72,38 @@ def hugin_stitch(config, nice=19, cleanup=False):
         if process.returncode != 0:
             raise Exception(f"Command failed with return code {process.returncode}")
 
-    if cleanup:
-        # remove temporary directory
-        shutil.rmtree(tmp_dir)
-
     return output_path
 
 
-def hugin_refine(config, nice=19, cleanup=False):
-    files = config.imglist
-    scan_id = config.scan_id
-    scan_dir = config.scan_dir
-    tmp_dir = config.tmp_dir
-
-    project_path = os.path.join(tmp_dir, scan_id + ".pto")
-    output_path = os.path.join(scan_dir, scan_id + ".jpg")
+def hugin_refine(config, nice=19):
+    pto_path = config.pto_path
+    output_path =  os.path.join(config.scan_dir, f'{config.scan_id}.jpg')
 
     # Create Hugin project
-    subprocess.run(['pto_gen', '--projection=2', '--fov=360', '-o', project_path, *files], check=True)
+    subprocess.run(['pto_gen', '--projection=2', '--fov=360', '-o', pto_path, *config.imglist], check=True)
 
     # Apply template
-    subprocess.run(['pto_template', f'--output={project_path}', f'--template={config.template_path}', project_path], check=True)
+    subprocess.run(['pto_template', f'--output={pto_path}', f'--template={config.template_path}', pto_path], check=True)
 
     # Add control points
-    subprocess.run(['cpfind', '-o', project_path, '--multirow', project_path], check=True)
+    subprocess.run(['cpfind', '-o', pto_path, '--multirow', pto_path], check=True)
 
     # Clean control points
-    subprocess.run(['cpclean', '-o', project_path, project_path], check=True)
+    subprocess.run(['cpclean', '-o', pto_path, pto_path], check=True)
 
     # Find line features
-    subprocess.run(['linefind', '-o', project_path, project_path], check=True)
+    subprocess.run(['linefind', '-o', pto_path, pto_path], check=True)
 
     # Optimize the project
-    subprocess.run(['pto_var', '-o', project_path, '--opt', 'TrX,TrY,TrZ,r,Eev,Ra,Rb,Rc,Rd,Re,!TrX0,!TrY0,!TrZ0,!r0,!Eev0,!Ra1,!Rb1,!Rc1,!Rd1,!Re1', project_path], check=True)
-    subprocess.run(['autooptimiser', '-n', '-o', project_path, project_path], check=True)
+    subprocess.run(['pto_var', '-o', pto_path, '--opt', 'TrX,TrY,TrZ,r,Eev,Ra,Rb,Rc,Rd,Re,!TrX0,!TrY0,!TrZ0,!r0,!Eev0,!Ra1,!Rb1,!Rc1,!Rd1,!Re1', pto_path], check=True)
+    subprocess.run(['autooptimiser', '-n', '-o', pto_path, pto_path], check=True)
 
     # Modify resolution of the temporary project file
-    hugin_modify(project_path, project_path, width=config.get("PANO", "PANO_WIDTH"))
+    hugin_modify(pto_path, pto_path, width=config.get("PANO", "PANO_WIDTH"))
 
     # Start stitching as non-blocking thread with low priority
     if config.get("ENABLE_PANO"):
-        cmd_string = ['nice', '-n', str(nice), 'hugin_executor', '--stitching', f'--prefix={output_path}', project_path]
+        cmd_string = ['nice', '-n', str(nice), 'hugin_executor', '--stitching', f'--prefix={output_path}', pto_path]
         process = subprocess.Popen(cmd_string)
 
         # Wait for the process to finish
@@ -128,10 +112,6 @@ def hugin_refine(config, nice=19, cleanup=False):
         # Check return code if stitching was successful
         if process.returncode != 0:
             raise Exception(f"Command failed with return code {process.returncode}")
-
-    if cleanup:
-        # Remove temporary directory
-        shutil.rmtree(tmp_dir)
 
     return output_path
 
