@@ -119,6 +119,24 @@ Scan duration:
         sudo nano /etc/systemd/logind.conf
         HandlePowerKey=poweroff
 
+### enable i2c-GPIO for GY-521 Accelerometer
+
+GY-521 (MPU 6060): Accelerometer, Gyroscope and thermometer  
+i2c adress: 0x68  
+![GY-521](https://www.makershop.de/download/MPU6050-Pinout.png)
+
+Since GPIO3 is hardwired to the Power Button, we need to use i2c-GPIO to map custom i2c pins ([tutorial](https://www.instructables.com/Raspberry-PI-Multiple-I2c-Devices/)). Unlike serial is not getting crossed, so we connect SDA-SDA and SCL-SCL.  
+SDA: GPIO22  
+SCL: GPIO27  
+
+disable ic2_arm and enable i2c-gpio in /boot/firmware/config.txt
+
+    dtparam=i2c_arm=off
+    dtoverlay=i2c-gpio,bus=3,i2c_gpio_delay_us=1,i2c_gpio_sda=22,i2c_gpio_scl=27
+
+search for devices on i2c bus 3:
+
+    sudo i2cdetect -y 3
 
 ### Power LED and CPU fan
 
