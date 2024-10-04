@@ -2,8 +2,8 @@
     "ENABLE_LIDAR": true,
     "ENABLE_CAM": true,
 
-    "ENABLE_PANO": false,
-    "ENABLE_3D": false,
+    "ENABLE_PANO": true,
+    "ENABLE_3D": true,
 
     "ENABLE_VERTEXCOLOUR": true,
     "ENABLE_FILTERING": false,

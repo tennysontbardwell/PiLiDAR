@@ -1,41 +1,41 @@
 # hugin project file
 #hugin_ptoversion 2
-p f2 w6800 h3400 v360  k0 E5.96723 R0 n"TIFF_m c:LZW r:CROP"
+p f2 w6000 h3000 v360  k0 E5.9939 R0 n"TIFF_m c:LZW r:CROP"
 m i5
 
 # image lines
 #-hugin  cropFactor=1
-i w4056 h3040 f2 v210.54 Ra-0.556760013103485 Rb1.08139002323151 Rc0.462319999933243 Rd-1.21420001983643 Re-0.123929999768734 Eev6 Er1 Eb1 r-90.305 p9.9 y0.023 TrX0 TrY0 TrZ0 Tpy0 Tpp0 j0 a-0.04715 b0.03098 c-0.0399 d90.65 e-13.88 g0 t0 Va1 Vb0 Vc0 Vd0 Vx0 Vy0  Vm5 n"P:\Projekte\PiDAR\images\scan_02\image_0.0.jpg"
+i w4056 h3040 f2 v209.985276592394 Ra-4.80655241012573 Rb-1.26774728298187 Rc0.849629759788513 Rd-0.458220601081848 Re0.130296438932419 Eev6 Er1 Eb1 r-90.2224163662586 p9.0573485063515 y-4.29068372300762e-05 TrX0 TrY0 TrZ0 Tpy0 Tpp0 j0 a-0.0521155835134492 b0.0389167307518161 c-0.0439753904160461 d107.936088770132 e-48.9259899341278 g0 t0 Va1 Vb-0.126447745714135 Vc-0.361524111888474 Vd0.0753156093223864 Vx0 Vy0  Vm5 n"img/image_000.000_0.jpg"
 #-hugin  cropFactor=1
-i w4056 h3040 f2 v=0 Ra=0 Rb=0 Rc=0 Rd=0 Re=0 Eev6.00559692129219 Er1 Eb1 r-90.268 p9.829 y22.464 TrX0 TrY0 TrZ0 Tpy0 Tpp0 j0 a=0 b=0 c=0 d=0 e=0 g=0 t=0 Va=0 Vb=0 Vc=0 Vd=0 Vx=0 Vy=0  Vm5 n"P:\Projekte\PiDAR\images\scan_02\image_22.47.jpg"
+i w4056 h3040 f2 v=0 Ra=0 Rb=0 Rc=0 Rd=0 Re=0 Eev5.99363869689686 Er1 Eb1 r-90.2670793558349 p9.04287322752135 y22.7190924789117 TrX0 TrY0 TrZ0 Tpy0 Tpp0 j0 a=0 b=0 c=0 d=0 e=0 g=0 t=0 Va=0 Vb=0 Vc=0 Vd=0 Vx=0 Vy=0  Vm5 n"img/image_022.474_0.jpg"
 #-hugin  cropFactor=1
-i w4056 h3040 f2 v=0 Ra=0 Rb=0 Rc=0 Rd=0 Re=0 Eev6.00370405111642 Er1 Eb1 r-90.256 p9.683 y44.765 TrX0 TrY0 TrZ0 Tpy0 Tpp0 j0 a=0 b=0 c=0 d=0 e=0 g=0 t=0 Va=0 Vb=0 Vc=0 Vd=0 Vx=0 Vy=0  Vm5 n"P:\Projekte\PiDAR\images\scan_02\image_44.98.jpg"
+i w4056 h3040 f2 v=0 Ra=0 Rb=0 Rc=0 Rd=0 Re=0 Eev5.98363040342416 Er1 Eb1 r-90.2651420326667 p9.02871491593674 y45.0208116884347 TrX0 TrY0 TrZ0 Tpy0 Tpp0 j0 a=0 b=0 c=0 d=0 e=0 g=0 t=0 Va=0 Vb=0 Vc=0 Vd=0 Vx=0 Vy=0  Vm5 n"img/image_044.978_0.jpg"
 #-hugin  cropFactor=1
-i w4056 h3040 f2 v=0 Ra=0 Rb=0 Rc=0 Rd=0 Re=0 Eev5.99836634480811 Er1 Eb1 r-90.202 p9.506 y67.195 TrX0 TrY0 TrZ0 Tpy0 Tpp0 j0 a=0 b=0 c=0 d=0 e=0 g=0 t=0 Va=0 Vb=0 Vc=0 Vd=0 Vx=0 Vy=0  Vm5 n"P:\Projekte\PiDAR\images\scan_02\image_67.48.jpg"
+i w4056 h3040 f2 v=0 Ra=0 Rb=0 Rc=0 Rd=0 Re=0 Eev5.97988528041147 Er1 Eb1 r-90.2454421195383 p8.95537986601864 y67.8157694986169 TrX0 TrY0 TrZ0 Tpy0 Tpp0 j0 a=0 b=0 c=0 d=0 e=0 g=0 t=0 Va=0 Vb=0 Vc=0 Vd=0 Vx=0 Vy=0  Vm5 n"img/image_067.483_0.jpg"
 #-hugin  cropFactor=1
-i w4056 h3040 f2 v=0 Ra=0 Rb=0 Rc=0 Rd=0 Re=0 Eev5.98852182797737 Er1 Eb1 r-90.241 p9.323 y89.913 TrX0 TrY0 TrZ0 Tpy0 Tpp0 j0 a=0 b=0 c=0 d=0 e=0 g=0 t=0 Va=0 Vb=0 Vc=0 Vd=0 Vx=0 Vy=0  Vm5 n"P:\Projekte\PiDAR\images\scan_02\image_89.99.jpg"
+i w4056 h3040 f2 v=0 Ra=0 Rb=0 Rc=0 Rd=0 Re=0 Eev5.97953255124713 Er1 Eb1 r-90.351532663034 p8.91616497755516 y89.8310794152155 TrX0 TrY0 TrZ0 Tpy0 Tpp0 j0 a=0 b=0 c=0 d=0 e=0 g=0 t=0 Va=0 Vb=0 Vc=0 Vd=0 Vx=0 Vy=0  Vm5 n"img/image_089.987_0.jpg"
 #-hugin  cropFactor=1
-i w4056 h3040 f2 v=0 Ra=0 Rb=0 Rc=0 Rd=0 Re=0 Eev5.98469709613001 Er1 Eb1 r-90.343 p9.147 y112.377 TrX0 TrY0 TrZ0 Tpy0 Tpp0 j0 a=0 b=0 c=0 d=0 e=0 g=0 t=0 Va=0 Vb=0 Vc=0 Vd=0 Vx=0 Vy=0  Vm5 n"P:\Projekte\PiDAR\images\scan_02\image_112.49.jpg"
+i w4056 h3040 f2 v=0 Ra=0 Rb=0 Rc=0 Rd=0 Re=0 Eev5.97220923515241 Er1 Eb1 r-90.4496488528362 p8.88035965571 y112.611704339295 TrX0 TrY0 TrZ0 Tpy0 Tpp0 j0 a=0 b=0 c=0 d=0 e=0 g=0 t=0 Va=0 Vb=0 Vc=0 Vd=0 Vx=0 Vy=0  Vm5 n"img/image_112.491_0.jpg"
 #-hugin  cropFactor=1
-i w4056 h3040 f2 v=0 Ra=0 Rb=0 Rc=0 Rd=0 Re=0 Eev5.98408038995718 Er1 Eb1 r-90.437 p9.09 y134.722 TrX0 TrY0 TrZ0 Tpy0 Tpp0 j0 a=0 b=0 c=0 d=0 e=0 g=0 t=0 Va=0 Vb=0 Vc=0 Vd=0 Vx=0 Vy=0  Vm5 n"P:\Projekte\PiDAR\images\scan_02\image_135.0.jpg"
+i w4056 h3040 f2 v=0 Ra=0 Rb=0 Rc=0 Rd=0 Re=0 Eev5.97687895855292 Er1 Eb1 r-90.4900382151099 p8.91338998045877 y134.750779484891 TrX0 TrY0 TrZ0 Tpy0 Tpp0 j0 a=0 b=0 c=0 d=0 e=0 g=0 t=0 Va=0 Vb=0 Vc=0 Vd=0 Vx=0 Vy=0  Vm5 n"img/image_134.996_0.jpg"
 #-hugin  cropFactor=1
-i w4056 h3040 f2 v=0 Ra=0 Rb=0 Rc=0 Rd=0 Re=0 Eev5.98656442388362 Er1 Eb1 r-90.552 p9.127 y157.333 TrX0 TrY0 TrZ0 Tpy0 Tpp0 j0 a=0 b=0 c=0 d=0 e=0 g=0 t=0 Va=0 Vb=0 Vc=0 Vd=0 Vx=0 Vy=0  Vm5 n"P:\Projekte\PiDAR\images\scan_02\image_157.5.jpg"
+i w4056 h3040 f2 v=0 Ra=0 Rb=0 Rc=0 Rd=0 Re=0 Eev5.98124846868329 Er1 Eb1 r-90.4756236357129 p8.99560667622209 y157.612169523909 TrX0 TrY0 TrZ0 Tpy0 Tpp0 j0 a=0 b=0 c=0 d=0 e=0 g=0 t=0 Va=0 Vb=0 Vc=0 Vd=0 Vx=0 Vy=0  Vm5 n"img/image_157.500_0.jpg"
 #-hugin  cropFactor=1
-i w4056 h3040 f2 v=0 Ra=0 Rb=0 Rc=0 Rd=0 Re=0 Eev5.99147225051567 Er1 Eb1 r-90.572 p9.238 y179.807 TrX0 TrY0 TrZ0 Tpy0 Tpp0 j0 a=0 b=0 c=0 d=0 e=0 g=0 t=0 Va=0 Vb=0 Vc=0 Vd=0 Vx=0 Vy=0  Vm5 n"P:\Projekte\PiDAR\images\scan_02\image_179.97.jpg"
+i w4056 h3040 f2 v=0 Ra=0 Rb=0 Rc=0 Rd=0 Re=0 Eev5.98564251039666 Er1 Eb1 r-90.4058956513262 p9.07886026911782 y-179.662579795123 TrX0 TrY0 TrZ0 Tpy0 Tpp0 j0 a=0 b=0 c=0 d=0 e=0 g=0 t=0 Va=0 Vb=0 Vc=0 Vd=0 Vx=0 Vy=0  Vm5 n"img/image_179.974_0.jpg"
 #-hugin  cropFactor=1
-i w4056 h3040 f2 v=0 Ra=0 Rb=0 Rc=0 Rd=0 Re=0 Eev5.98919169085261 Er1 Eb1 r-90.762 p9.354 y-158.046 TrX0 TrY0 TrZ0 Tpy0 Tpp0 j0 a=0 b=0 c=0 d=0 e=0 g=0 t=0 Va=0 Vb=0 Vc=0 Vd=0 Vx=0 Vy=0  Vm5 n"P:\Projekte\PiDAR\images\scan_02\image_202.48.jpg"
+i w4056 h3040 f2 v=0 Ra=0 Rb=0 Rc=0 Rd=0 Re=0 Eev5.9958896612066 Er1 Eb1 r-90.4075238061587 p9.10944722148307 y-157.413034084729 TrX0 TrY0 TrZ0 Tpy0 Tpp0 j0 a=0 b=0 c=0 d=0 e=0 g=0 t=0 Va=0 Vb=0 Vc=0 Vd=0 Vx=0 Vy=0  Vm5 n"img/image_202.478_0.jpg"
 #-hugin  cropFactor=1
-i w4056 h3040 f2 v=0 Ra=0 Rb=0 Rc=0 Rd=0 Re=0 Eev5.99166704918166 Er1 Eb1 r-90.75 p9.461 y-135.548 TrX0 TrY0 TrZ0 Tpy0 Tpp0 j0 a=0 b=0 c=0 d=0 e=0 g=0 t=0 Va=0 Vb=0 Vc=0 Vd=0 Vx=0 Vy=0  Vm5 n"P:\Projekte\PiDAR\images\scan_02\image_224.98.jpg"
+i w4056 h3040 f2 v=0 Ra=0 Rb=0 Rc=0 Rd=0 Re=0 Eev6.01227499350207 Er1 Eb1 r-90.3743472259208 p9.13705921840388 y-134.721108944638 TrX0 TrY0 TrZ0 Tpy0 Tpp0 j0 a=0 b=0 c=0 d=0 e=0 g=0 t=0 Va=0 Vb=0 Vc=0 Vd=0 Vx=0 Vy=0  Vm5 n"img/image_224.983_0.jpg"
 #-hugin  cropFactor=1
-i w4056 h3040 f2 v=0 Ra=0 Rb=0 Rc=0 Rd=0 Re=0 Eev5.98494437953918 Er1 Eb1 r-90.706 p9.566 y-113.19 TrX0 TrY0 TrZ0 Tpy0 Tpp0 j0 a=0 b=0 c=0 d=0 e=0 g=0 t=0 Va=0 Vb=0 Vc=0 Vd=0 Vx=0 Vy=0  Vm5 n"P:\Projekte\PiDAR\images\scan_02\image_247.49.jpg"
+i w4056 h3040 f2 v=0 Ra=0 Rb=0 Rc=0 Rd=0 Re=0 Eev6.0094973834245 Er1 Eb1 r-90.277076341051 p9.086759766045 y-112.55431716898 TrX0 TrY0 TrZ0 Tpy0 Tpp0 j0 a=0 b=0 c=0 d=0 e=0 g=0 t=0 Va=0 Vb=0 Vc=0 Vd=0 Vx=0 Vy=0  Vm5 n"img/image_247.487_0.jpg"
 #-hugin  cropFactor=1
-i w4056 h3040 f2 v=0 Ra=0 Rb=0 Rc=0 Rd=0 Re=0 Eev5.97865918376896 Er1 Eb1 r-90.647 p9.639 y-90.51 TrX0 TrY0 TrZ0 Tpy0 Tpp0 j0 a=0 b=0 c=0 d=0 e=0 g=0 t=0 Va=0 Vb=0 Vc=0 Vd=0 Vx=0 Vy=0  Vm5 n"P:\Projekte\PiDAR\images\scan_02\image_269.99.jpg"
+i w4056 h3040 f2 v=0 Ra=0 Rb=0 Rc=0 Rd=0 Re=0 Eev6.01389259553605 Er1 Eb1 r-90.2506051230809 p8.99364298657094 y-89.8916985180179 TrX0 TrY0 TrZ0 Tpy0 Tpp0 j0 a=0 b=0 c=0 d=0 e=0 g=0 t=0 Va=0 Vb=0 Vc=0 Vd=0 Vx=0 Vy=0  Vm5 n"img/image_269.991_0.jpg"
 #-hugin  cropFactor=1
-i w4056 h3040 f2 v=0 Ra=0 Rb=0 Rc=0 Rd=0 Re=0 Eev5.97199049698126 Er1 Eb1 r-90.598 p9.717 y-68.105 TrX0 TrY0 TrZ0 Tpy0 Tpp0 j0 a=0 b=0 c=0 d=0 e=0 g=0 t=0 Va=0 Vb=0 Vc=0 Vd=0 Vx=0 Vy=0  Vm5 n"P:\Projekte\PiDAR\images\scan_02\image_292.5.jpg"
+i w4056 h3040 f2 v=0 Ra=0 Rb=0 Rc=0 Rd=0 Re=0 Eev6.01601251906396 Er1 Eb1 r-90.2620985870527 p8.918588934408 y-67.7134234073148 TrX0 TrY0 TrZ0 Tpy0 Tpp0 j0 a=0 b=0 c=0 d=0 e=0 g=0 t=0 Va=0 Vb=0 Vc=0 Vd=0 Vx=0 Vy=0  Vm5 n"img/image_292.496_0.jpg"
 #-hugin  cropFactor=1
-i w4056 h3040 f2 v=0 Ra=0 Rb=0 Rc=0 Rd=0 Re=0 Eev5.95982725569814 Er1 Eb1 r-90.546 p9.783 y-45.58 TrX0 TrY0 TrZ0 Tpy0 Tpp0 j0 a=0 b=0 c=0 d=0 e=0 g=0 t=0 Va=0 Vb=0 Vc=0 Vd=0 Vx=0 Vy=0  Vm5 n"P:\Projekte\PiDAR\images\scan_02\image_314.97.jpg"
+i w4056 h3040 f2 v=0 Ra=0 Rb=0 Rc=0 Rd=0 Re=0 Eev6.00731536470932 Er1 Eb1 r-90.2904340675244 p8.91863504325431 y-45.1771272643656 TrX0 TrY0 TrZ0 Tpy0 Tpp0 j0 a=0 b=0 c=0 d=0 e=0 g=0 t=0 Va=0 Vb=0 Vc=0 Vd=0 Vx=0 Vy=0  Vm5 n"img/image_314.970_0.jpg"
 #-hugin  cropFactor=1
-i w4056 h3040 f2 v=0 Ra=0 Rb=0 Rc=0 Rd=0 Re=0 Eev5.95449 Er1 Eb1 r-90.339 p9.896 y-22.775 TrX0 TrY0 TrZ0 Tpy0 Tpp0 j0 a=0 b=0 c=0 d=0 e=0 g=0 t=0 Va=0 Vb=0 Vc=0 Vd=0 Vx=0 Vy=0  Vm5 n"P:\Projekte\PiDAR\images\scan_02\image_337.47.jpg"
+i w4056 h3040 f2 v=0 Ra=0 Rb=0 Rc=0 Rd=0 Re=0 Eev6.00253623298392 Er1 Eb1 r-90.2463826143376 p9.02064314429925 y-22.2248109353925 TrX0 TrY0 TrZ0 Tpy0 Tpp0 j0 a=0 b=0 c=0 d=0 e=0 g=0 t=0 Va=0 Vb=0 Vc=0 Vd=0 Vx=0 Vy=0  Vm5 n"img/image_337.474_0.jpg"
 
 
 # specify variables that should be optimized
@@ -119,7 +119,7 @@ v
 # control points
 
 # masks
-k i4 t4 p"1134 -4 972 90 803 221 693 332 602 465 535 584 458 733 403 881 355 1058 322 1242 298 1440 309 1626 323 1792 359 1946 415 2123 482 2287 561 2430 636 2553 745 2686 884 2835 1024 2935 1276 3071 -38 3110 -62 -36 979 -37"
+k i4 t4 p"1134 -4 1001 95 822 294 746 424 651 558 594 686 541 830 485 973 423 1199 400 1412 400 1640 420 1840 440 1938 461 2033 498 2177 555 2287 634 2430 719 2549 803 2667 957 2782 1102 2883 1402 3075 -38 3110 -62 -36 979 -37"
 k i4 t4 p"2961 -41 3182 120 3394 325 3549 546 3688 781 3779 1012 3817 1298 3819 1558 3786 1850 3710 2122 3603 2351 3462 2563 3280 2764 3093 2935 2826 3083 4086 3086 4105 -41 3309 -65"
 
 #hugin_optimizeReferenceImage 0
