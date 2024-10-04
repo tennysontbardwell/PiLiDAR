@@ -83,11 +83,6 @@ try:
         save_raw_scan(lidar.raw_path, raw_scan)
     
 
-    # STITCHING PROCESS (NON-BLOCKING)
-    if config.get("ENABLE_CAM"): # always create the hugin project when photos are taken
-        project_path = hugin_stitch(config)
-        
-
 finally:
     print("PiLiDAR STOPPED")
     if config.get("ENABLE_LIDAR"):
@@ -97,6 +92,12 @@ finally:
     ## Relay Power off
     # GPIO.output(RELAY_PIN, 0)
     # GPIO.cleanup(RELAY_PIN)
+
+
+
+# STITCHING PROCESS
+if config.get("ENABLE_CAM"): # always create the hugin project when photos are taken
+    project_path = hugin_stitch(config)
 
 
 # 3D PROCESSING

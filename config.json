@@ -92,8 +92,8 @@
     },
 
     "3D": {
-        "Y_OFFSET": -37.4,
-        "Z_OFFSET": -20.0,
+        "Y_OFFSET": -37.5,
+        "Z_OFFSET": -41.9,
         "NORMAL_RADIUS": 30,
         "SCALE": 0.001, 
         "EXT": "ply",
