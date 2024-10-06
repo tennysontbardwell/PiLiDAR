@@ -305,13 +305,16 @@ if __name__ == "__main__":
         pass
     
     config = Config()
-
+    
+    # use LD06 or STL27L
+    config.set_device("LD06")
+    
     config.init(scan_id="_")
     visualize = True
 
     if visualize:
         from matplotlib_2D import plot_2D
-        visualization = plot_2D(plotrange=4000, s=0.1)
+        visualization = plot_2D(plotrange=4000, s=1)
     else:
         import threading
         visualization = None

@@ -38,7 +38,7 @@ def get_bounding_box_size(pcd):
 if __name__ == "__main__":
 
     view={"zoom": 0.1, "front": (-1, 1, 0.5), "lookat": (0, 0, 0), "up": (0, 0, 1)}
-    point_size = 1
+    point_size = 1.0
     voxel_size = 0.15  # meter
 
     pcd_list= [load_pointcloud("scans/240928-0912/240928-0912.ply"),
@@ -52,8 +52,11 @@ if __name__ == "__main__":
     # # bounding box size
     print(f"Bounding box: {get_bounding_box_size(source)}")
 
+    # VISUALIZE BEFORE
+    visualize([source, target], point_colors="uniform", view=view, point_size=point_size)
 
-    transformation = run_registration(source, target, voxel_size=voxel_size)
+
+    transformation = run_registration(source, target, voxel_size=voxel_size, show=False)
 
     # Translation and rotation vectors
     icp_translation, icp_euler = get_transform_vectors(transformation)

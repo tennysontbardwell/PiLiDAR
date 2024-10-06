@@ -23,7 +23,7 @@
             "PWM_COEFFS": null
         },
         "LD06": {
-            "PORT_WIN": "COM8",
+            "PORT_WIN": "COM4",
             "PORT": "/dev/ttyUSB0",
             "BAUDRATE": 230400,
             "SAMPLING_RATE": 4500,

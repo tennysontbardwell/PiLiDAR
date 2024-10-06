@@ -57,37 +57,9 @@ class Config:
         
         
         self.platform = get_platform()
-        self.DEVICE = self.get("LIDAR", "DEVICE")
-        self.TARGET_SPEED = self.get("LIDAR", "TARGET_SPEED")
-
-        self.SAMPLING_RATE = self.get("LIDAR", self.DEVICE, "SAMPLING_RATE")
-        self.BAUDRATE = self.get("LIDAR", self.DEVICE , "BAUDRATE")
-        self.PORT = self.get("LIDAR", self.DEVICE , "PORT")
-
-
-        if self.platform == 'RaspberryPi':
-            print("PiLiDAR on Raspberry Pi")
-
-            # BUG legacy: allow access to serial port on Raspberry Pi
-            allow_serial()
-
-            self.gpio_setup()  # enable GPIO Ports
-
-            self.PORT = self.get("LIDAR", self.DEVICE , "PORT")
-            if not os.path.exists(self.PORT): 
-                # if USB controller board is not connected, try serial port
-                self.PORT = self.get("LIDAR", "GPIO_SERIAL", "PORT")
-            
-            # disable filtering on Raspberry Pi as it is computationally too expensive
-            if not self.get("FILTERING", "FILTER_ON_PI"):
-                self.set(False, "ENABLE_FILTERING")
+        self.set_device(self.get("LIDAR", "DEVICE"))
         
-        elif self.platform == 'Windows':
-            self.PORT = self.get("LIDAR", self.DEVICE , "PORT_WIN")
-            # disable GPIO-serial settings
-            self.set(False, "LIDAR", "GPIO_SERIAL", "ENABLE")
         
-
         # STEPPER
         self.STEPPER_RES = self.get("STEPPER", "STEPPER_RES")
         self.MICROSTEPS = self.get("STEPPER", "MICROSTEPS")
@@ -142,6 +114,38 @@ class Config:
         self.tmp_dir   = make_dir(os.path.join(self.scan_dir, "tmp"))
         
         self.imglist = []
+
+
+    def set_device(self, device: str):
+        '''set sampling rate, baudrate and port for selected device'''
+        self.DEVICE = device
+        self.TARGET_SPEED = self.get("LIDAR", "TARGET_SPEED")
+
+        self.SAMPLING_RATE = self.get("LIDAR", self.DEVICE, "SAMPLING_RATE")
+        self.BAUDRATE = self.get("LIDAR", self.DEVICE , "BAUDRATE")
+        self.PORT = self.get("LIDAR", self.DEVICE , "PORT")
+
+        if self.platform == 'RaspberryPi':
+            print("PiLiDAR on Raspberry Pi")
+
+            # BUG legacy: allow access to serial port on Raspberry Pi
+            allow_serial()
+
+            self.gpio_setup()  # enable GPIO Ports
+
+            self.PORT = self.get("LIDAR", self.DEVICE , "PORT")
+            if not os.path.exists(self.PORT): 
+                # if USB controller board is not connected, try serial port
+                self.PORT = self.get("LIDAR", "GPIO_SERIAL", "PORT")
+            
+            # disable filtering on Raspberry Pi as it is computationally too expensive
+            if not self.get("FILTERING", "FILTER_ON_PI"):
+                self.set(False, "ENABLE_FILTERING")
+        
+        elif self.platform == 'Windows':
+            self.PORT = self.get("LIDAR", self.DEVICE , "PORT_WIN")
+            # disable GPIO-serial settings
+            self.set(False, "LIDAR", "GPIO_SERIAL", "ENABLE")
 
 
     def get(self, *args):
