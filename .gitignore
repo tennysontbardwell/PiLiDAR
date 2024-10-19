@@ -3,14 +3,9 @@
 .ipynb_checkpoints
 __pycache__
 Thumbs.db
-_old/
 
-# work in progress
-/mechanical_design/*
-!mechanical_design/images
-!mechanical_design/v2
-!mechanical_design/Fritzing
-/mechanical_design/Fritzing/parts
+# box-pano for UV mapping
+meshlab/tmp/*
 
 # data directory
 /scans/
