@@ -186,8 +186,11 @@ class Config:
 
 
 def format_value(value, digits):
-    formatted_value = f"{round(value, digits):0{4 + digits}.{digits}f}"
-    return formatted_value
+    try:
+        formatted_value = f"{round(value, digits):0{4 + digits}.{digits}f}"
+        return formatted_value
+    except (TypeError, ValueError):
+        return None
 
 
 if __name__ == "__main__":

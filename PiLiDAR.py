@@ -3,6 +3,7 @@ import os
 
 from lib.lidar_driver import Lidar
 from lib.a4988_driver import A4988
+from lib.imu_driver import MPU6050Wrapper
 from lib.config import Config, format_value
 from lib.pointcloud import process_raw, save_raw_scan, get_scan_dict
 from lib.rpicam_utils import take_HDR_photo, estimate_camera_parameters
@@ -11,6 +12,12 @@ from lib.pano_utils import hugin_stitch
 
 config = Config()
 config.init()
+
+
+# initialize IMU
+enable_IMU = True
+if enable_IMU:
+    mpu_wrapper = MPU6050Wrapper()
 
 
 # initialize stepper
@@ -32,6 +39,10 @@ if config.get("ENABLE_LIDAR"):
         stepper.move_steps(config.steps if config.SCAN_ANGLE > 0 else -config.steps)
         lidar.z_angle = stepper.get_current_angle()
 
+        if enable_IMU:
+            angles = mpu_wrapper.get_euler_angles()
+            print(f'{format_value(lidar.z_angle, 2)} : [{format_value(angles["roll"], 2)},{format_value(angles["pitch"], 2)},{format_value(angles["yaw"], 2)}]')
+
     if not config.get("ENABLE_CAM"):
         # wait for lidar to lock rotational speed
         sleep(2)
@@ -41,15 +52,24 @@ try:
     # 360° SHOOTING PHOTOS
     if config.get("ENABLE_CAM"):
         # CALIBRATE CAMERA: extract exposure time and gain from exif data, iterate through Red/Blue Gains for custom AWB
+        print("Calibrating Camera...")
         current_exposure_time, current_gain, current_awbgains = estimate_camera_parameters(config)
         # print("[RESULT] AE:", current_exposure_time, "| Gain:", current_gain, "| AWB R:", round(current_awbgains[0],3), "B:", round(current_awbgains[1],3))
 
         IMGCOUNT = config.get("PANO", "IMGCOUNT")
         for i in range(IMGCOUNT):
+            print(f"Taking photo {i+1}/{IMGCOUNT}")
+
             # take HighRes image using fixed values
             formatted_angle = format_value(stepper.get_current_angle(), config.get("ANGULAR_DIGITS"))
             imgpath = os.path.join(config.img_dir, f"image_{formatted_angle}.jpg")
             
+            if enable_IMU:
+                # get euler angle from IMU
+                angles = mpu_wrapper.get_euler_angles()
+                print(f'{format_value(lidar.z_angle, 2)} : [{format_value(angles["roll"], 2)}, {format_value(angles["pitch"], 2)}, {format_value(angles["yaw"], 2)}]')  # TODO: update lidar.z_angle
+
+            # take HDR photo
             imgpaths = take_HDR_photo(AEB           = config.get("CAM", "AEB"), 
                                       AEB_stops     = config.get("CAM", "AEB_STOPS"),
                                       path          = imgpath, 
@@ -63,6 +83,8 @@ try:
                                       blocking      = True)
             
             config.imglist.extend(imgpaths)
+
+            # rotate stepper to next photo angle
             stepper.move_to_angle((360/IMGCOUNT) * (i+1))
             sleep(1)
         
