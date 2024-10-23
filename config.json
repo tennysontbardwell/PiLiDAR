@@ -1,6 +1,7 @@
 {
     "ENABLE_LIDAR": true,
     "ENABLE_CAM": true,
+    "ENABLE_IMU": true,
 
     "ENABLE_PANO": true,
     "ENABLE_3D": true,
@@ -83,6 +84,13 @@
         "raw": false,
         "remove_tmp": false
     },
+
+    "IMU": {
+        "i2c_bus": 3, 
+        "device_address": "0x68",
+        "freq_divider": "0x04",
+        "sampling_rate": 40
+    }, 
 
     "PANO": {
         "IMGCOUNT": 4,

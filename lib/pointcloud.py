@@ -11,8 +11,10 @@ import pickle
 
 try:  # TODO remove -> npy files replaced by single pkl file
     from lib.file_utils import angles_from_filenames
+    from lib.imu_orientation import Orientation
 except:
     from file_utils import angles_from_filenames
+    from imu_orientation import Orientation
 
 
 def get_scan_dict(z_angles, angular_list=None, cartesian_list=None, scan_id=None, device_id=None, sensor=None, hardware=None, location=None, author=None):
@@ -94,6 +96,17 @@ def process_raw(config, save=True):
     if os.path.exists(config.raw_path):
         # print("lidar.pkl file found:", config.raw_path)
         raw_scan = load_raw_scan(config.raw_path)
+        
+
+        # IMU data
+        if "quaternions" in raw_scan:
+            orientation = Orientation(raw_scan["quaternions"], degrees=True)
+            # for i, euler_angles in enumerate(orientation.euler_list):
+            #     print(f"Euler {i}: {euler_angles.x:.3} {euler_angles.y:.3} {euler_angles.z:.3}")
+            print(f"IMU data loaded: {len(orientation.euler_list)} samples.")
+            # TODO: use data to level the pointcloud
+
+        
         array_3D = merge_2D_points(raw_scan, 
                         position_offset=(0, config.get("3D","Y_OFFSET"), 0),     # Y offset in mm
                         angle_offset=config.get("LIDAR","LIDAR_OFFSET_ANGLE"),   # small lidar rotation fix

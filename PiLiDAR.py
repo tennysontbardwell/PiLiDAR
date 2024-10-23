@@ -1,5 +1,7 @@
 from time import sleep
 import os
+# import numpy as np
+import json
 
 from lib.lidar_driver import Lidar
 from lib.a4988_driver import A4988
@@ -13,11 +15,14 @@ from lib.pano_utils import hugin_stitch
 config = Config()
 config.init()
 
+enable_cam   = config.get("ENABLE_CAM")
+enable_lidar = config.get("ENABLE_LIDAR")
+enable_IMU   = config.get("ENABLE_IMU")
 
 # initialize IMU
-enable_IMU = True
 if enable_IMU:
-    mpu_wrapper = MPU6050Wrapper()
+    imu = MPU6050Wrapper()
+    quat_list = []
 
 
 # initialize stepper
@@ -31,7 +36,7 @@ stepper = A4988(config.get("STEPPER", "pins", "DIR_PIN"),
 
 
 # initialize lidar
-if config.get("ENABLE_LIDAR"):
+if enable_lidar:
     lidar = Lidar(config, visualization=None)
     
     # callback function for lidar.read_loop()
@@ -40,17 +45,19 @@ if config.get("ENABLE_LIDAR"):
         lidar.z_angle = stepper.get_current_angle()
 
         if enable_IMU:
-            angles = mpu_wrapper.get_euler_angles()
-            print(f'{format_value(lidar.z_angle, 2)} : [{format_value(angles["roll"], 2)},{format_value(angles["pitch"], 2)},{format_value(angles["yaw"], 2)}]')
-
-    if not config.get("ENABLE_CAM"):
+            # euler = imu.get_euler_angles()
+            # print(f'{format_value(lidar.z_angle, 2)} | Euler: x {format_value(euler.x, 2)} y {format_value(euler.y, 2)} z {format_value(euler.z, 2)}')
+            quat_values = imu.get_quat_values()
+            quat_list.append(quat_values)  # [lidar.z_angle, *quat_values]
+            
+    if not enable_cam:
         # wait for lidar to lock rotational speed
         sleep(2)
 
 # MAIN
 try:
     # 360° SHOOTING PHOTOS
-    if config.get("ENABLE_CAM"):
+    if enable_cam:
         # CALIBRATE CAMERA: extract exposure time and gain from exif data, iterate through Red/Blue Gains for custom AWB
         print("Calibrating Camera...")
         current_exposure_time, current_gain, current_awbgains = estimate_camera_parameters(config)
@@ -64,10 +71,9 @@ try:
             formatted_angle = format_value(stepper.get_current_angle(), config.get("ANGULAR_DIGITS"))
             imgpath = os.path.join(config.img_dir, f"image_{formatted_angle}.jpg")
             
-            if enable_IMU:
-                # get euler angle from IMU
-                angles = mpu_wrapper.get_euler_angles()
-                print(f'{format_value(lidar.z_angle, 2)} : [{format_value(angles["roll"], 2)}, {format_value(angles["pitch"], 2)}, {format_value(angles["yaw"], 2)}]')  # TODO: update lidar.z_angle
+            # if enable_IMU:
+            #     euler = imu.get_euler_angles()
+            #     print(f'{format_value(lidar.z_angle, 2)} | Euler: x {format_value(euler.x, 2)} y {format_value(euler.y, 2)} z {format_value(euler.z, 2)}')  # TODO: update lidar.z_angle
 
             # take HDR photo
             imgpaths = take_HDR_photo(AEB           = config.get("CAM", "AEB"), 
@@ -94,7 +100,7 @@ try:
 
 
     # 180° SCAN
-    if config.get("ENABLE_LIDAR"):
+    if enable_lidar:
         lidar.read_loop(callback=move_steps_callback, 
                         max_packages=config.max_packages)
         
@@ -102,13 +108,24 @@ try:
 
         # Save raw_scan to pickle file
         raw_scan = get_scan_dict(lidar.z_angles, cartesian_list=lidar.cartesian_list)
+
+        if enable_IMU:
+            # angles_json = json.dumps(quat_list)
+            # with open(os.path.join(config.scan_dir, 'quaternions.json'), 'w') as json_file:
+            #     json_file.write(angles_json)
+            raw_scan["quaternions"] = quat_list  # inject IMU data
+
         save_raw_scan(lidar.raw_path, raw_scan)
     
 
 finally:
     print("PiLiDAR STOPPED")
-    if config.get("ENABLE_LIDAR"):
+    if enable_lidar:
         lidar.close()
+
+        if enable_IMU:
+            imu.close()
+
     stepper.close()
 
     ## Relay Power off
@@ -116,9 +133,8 @@ finally:
     # GPIO.cleanup(RELAY_PIN)
 
 
-
 # STITCHING PROCESS
-if config.get("ENABLE_CAM"): # always create the hugin project when photos are taken
+if enable_cam: # always create the hugin project when photos are taken
     project_path = hugin_stitch(config)
 
 
