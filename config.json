@@ -87,9 +87,8 @@
 
     "IMU": {
         "i2c_bus": 3, 
-        "device_address": "0x68",
-        "freq_divider": "0x04",
-        "sampling_rate": 40
+        "device_address": 104,
+        "frequency": 50
     }, 
 
     "PANO": {

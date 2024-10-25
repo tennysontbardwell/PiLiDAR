@@ -12,8 +12,6 @@ Speed Control on Raspberry Pi
 
 import numpy as np
 import serial
-import os
-import time
 
 # running from project root
 try:
@@ -130,14 +128,14 @@ class Lidar:
     def close(self):
         if self.pwm is not None:
             self.pwm.stop()
-            print("PWM stopped.")
+            print("PWM stopped.\n")
 
         if self.visualization is not None:
             self.visualization.close()
-            print("Visualization closed.")
+            print("Visualization closed.\n")
 
         self.serial_connection.close()
-        print("Serial connection closed.")
+        print("Serial connection closed.\n")
     
 
     def read_loop(self, callback=None, max_packages=None, digits=4):
@@ -163,18 +161,6 @@ class Lidar:
                         print("speed:", round(self.speed, 2))
                         if self.z_angle is not None:
                             print("z_angle:", round(self.z_angle, 2))
-
-
-                    # # TODO remove -> npy files replaced by single pkl file
-                    # # SAVE INDIVIDUAL NPY FILES
-                    # if self.z_angle is not None:
-                    #     fname = f"plane_{format_value(self.z_angle, digits)}"
-                    # else:
-                    #     # use current timestamp if z_angle is not available
-                    #     fname = f"{time.time()}"
-                    # filepath = os.path.join(self.data_dir, f"{fname}.npy")
-                    # save_data(filepath, self.points_2d)
-
 
                     # Append 2D plane to cartesian list. copying avoids identical pointers
                     self.cartesian_list.append(np.copy(self.points_2d))

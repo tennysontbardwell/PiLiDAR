@@ -1,7 +1,5 @@
 from time import sleep
 import os
-# import numpy as np
-import json
 
 from lib.lidar_driver import Lidar
 from lib.a4988_driver import A4988
@@ -10,6 +8,15 @@ from lib.config import Config, format_value
 from lib.pointcloud import process_raw, save_raw_scan, get_scan_dict
 from lib.rpicam_utils import take_HDR_photo, estimate_camera_parameters
 from lib.pano_utils import hugin_stitch
+
+
+print('''
+ ____  _ _     _ ____    _    ____ 
+|  _ \(_) |   (_)  _ \  / \  |  _ \ 
+| |_) | | |   | | | | |/ _ \ | |_) | 
+|  __/| | |___| | |_| / ___ \|  _ < 
+|_|   |_|_____|_|____/_/   \_\_| \_\ 
+''')
 
 
 config = Config()
@@ -21,7 +28,7 @@ enable_IMU   = config.get("ENABLE_IMU")
 
 # initialize IMU
 if enable_IMU:
-    imu = MPU6050Wrapper()
+    imu = MPU6050Wrapper(config.get("IMU", "i2c_bus"), config.get("IMU", "device_address"), config.get("IMU", "frequency"))
     quat_list = []
 
 
@@ -65,15 +72,15 @@ try:
 
         IMGCOUNT = config.get("PANO", "IMGCOUNT")
         for i in range(IMGCOUNT):
-            print(f"Taking photo {i+1}/{IMGCOUNT}")
+            lidar.z_angle = stepper.get_current_angle()
+            formatted_angle = format_value(lidar.z_angle, config.get("ANGULAR_DIGITS"))
 
-            # take HighRes image using fixed values
-            formatted_angle = format_value(stepper.get_current_angle(), config.get("ANGULAR_DIGITS"))
+            print(f"\nTaking photo {i+1}/{IMGCOUNT} | Angle: {formatted_angle}")            
             imgpath = os.path.join(config.img_dir, f"image_{formatted_angle}.jpg")
             
-            # if enable_IMU:
-            #     euler = imu.get_euler_angles()
-            #     print(f'{format_value(lidar.z_angle, 2)} | Euler: x {format_value(euler.x, 2)} y {format_value(euler.y, 2)} z {format_value(euler.z, 2)}')  # TODO: update lidar.z_angle
+            if enable_IMU:
+                euler = imu.get_euler_angles()
+                print(f'\tEuler: x {format_value(euler.x, 2)} y {format_value(euler.y, 2)} z {format_value(euler.z, 2)}')
 
             # take HDR photo
             imgpaths = take_HDR_photo(AEB           = config.get("CAM", "AEB"), 
@@ -92,15 +99,16 @@ try:
 
             # rotate stepper to next photo angle
             stepper.move_to_angle((360/IMGCOUNT) * (i+1))
-            sleep(1)
+            sleep(0.5)
         
         stepper.move_to_angle(0)
         stepper.move_steps(1)
-        sleep(1)
+        sleep(0.5)
 
 
     # 180° SCAN
     if enable_lidar:
+        print("\nLIDAR STARTED...\n")
         lidar.read_loop(callback=move_steps_callback, 
                         max_packages=config.max_packages)
         
@@ -110,16 +118,14 @@ try:
         raw_scan = get_scan_dict(lidar.z_angles, cartesian_list=lidar.cartesian_list)
 
         if enable_IMU:
-            # angles_json = json.dumps(quat_list)
-            # with open(os.path.join(config.scan_dir, 'quaternions.json'), 'w') as json_file:
-            #     json_file.write(angles_json)
-            raw_scan["quaternions"] = quat_list  # inject IMU data
+            # inject IMU data into raw_scan dict
+            raw_scan["quaternions"] = quat_list
 
         save_raw_scan(lidar.raw_path, raw_scan)
     
 
 finally:
-    print("PiLiDAR STOPPED")
+    print("\nPiLiDAR STOPPED\n")
     if enable_lidar:
         lidar.close()
 
@@ -134,10 +140,12 @@ finally:
 
 
 # STITCHING PROCESS
-if enable_cam: # always create the hugin project when photos are taken
+if enable_cam:
+    print("\nStitching Pano...")
     project_path = hugin_stitch(config)
 
 
 # 3D PROCESSING
 if config.get("ENABLE_3D"):
-    pcd = process_raw(config, save=True)  # loading pkl from config.raw_path
+    print("\nProcessing 3D Point Cloud...")
+    pcd = process_raw(config, save=True)

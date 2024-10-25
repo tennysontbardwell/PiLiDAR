@@ -84,7 +84,7 @@ if __name__ == '__main__':
             return arrow
 
 
-    q_list_int16 = np.load('quaternion_test.npz')['quat']  # TODO: load from raw_data["quaternion"] instead
+    q_list_int16 = np.load('imu_orientation/quaternions.npz')['quat']  # TODO: load from raw_data["quaternion"] instead
     orientation = Orientation(q_list_int16, degrees=True)
     
 
