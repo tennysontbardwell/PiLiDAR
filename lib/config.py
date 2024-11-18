@@ -126,7 +126,7 @@ class Config:
         self.PORT = self.get("LIDAR", self.DEVICE , "PORT")
 
         if self.platform == 'RaspberryPi':
-            print("PiLiDAR on Raspberry Pi")
+            print("Platform: Raspberry Pi")
 
             # BUG legacy: allow access to serial port on Raspberry Pi
             allow_serial()

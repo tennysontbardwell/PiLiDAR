@@ -9,11 +9,9 @@ import os
 from scipy.spatial.transform import Rotation as R
 import pickle
 
-try:  # TODO remove -> npy files replaced by single pkl file
-    from lib.file_utils import angles_from_filenames
+try:
     from lib.imu_orientation import Orientation
 except:
-    from file_utils import angles_from_filenames
     from imu_orientation import Orientation
 
 
@@ -103,7 +101,7 @@ def process_raw(config, save=True):
             orientation = Orientation(raw_scan["quaternions"], degrees=True)
             # for i, euler_angles in enumerate(orientation.euler_list):
             #     print(f"Euler {i}: {euler_angles.x:.3} {euler_angles.y:.3} {euler_angles.z:.3}")
-            print(f"IMU data loaded: {len(orientation.euler_list)} samples.")
+            print(f"\nIMU data loaded: {len(orientation.euler_list)} samples.")
             # TODO: use data to level the pointcloud
 
         
@@ -112,31 +110,33 @@ def process_raw(config, save=True):
                         angle_offset=config.get("LIDAR","LIDAR_OFFSET_ANGLE"),   # small lidar rotation fix
                         up_vector=(0,0,1)) 
 
-    else:  # TODO remove -> npy files replaced by single pkl file
-        print("lidar.pkl file not found!")
-        filepaths, z_angles = angles_from_filenames(config.lidar_dir, name="plane", ext="npy")
-        print(f"{len(filepaths)} files found (min: {min(z_angles)}, max: {max(z_angles)}).")
 
-        print("processing 3D planes...")
-        cartesian_list = get_cartesian_list(filepaths)
+    # else:  # TODO remove -> npy files replaced by single pkl file
+    #     from lib.file_utils import angles_from_filenames
 
-        raw_scan = get_scan_dict(z_angles, cartesian_list=cartesian_list)
-        if save:
-            save_raw_scan(config.raw_path, raw_scan)
+    #     print("lidar.pkl file not found!")
+    #     filepaths, z_angles = angles_from_filenames(config.lidar_dir, name="plane", ext="npy")
+    #     print(f"{len(filepaths)} files found (min: {min(z_angles)}, max: {max(z_angles)}).")
 
-        array_3D = merge_2D_points(raw_scan, 
-                                position_offset=(0, config.get("3D","Y_OFFSET"), 0),     # Y offset in mm
-                                angle_offset=config.get("LIDAR","LIDAR_OFFSET_ANGLE"),   # small lidar rotation fix
-                                up_vector=(0,0,1)) 
+    #     print("processing 3D planes...")
+    #     cartesian_list = get_cartesian_list(filepaths)
 
+    #     raw_scan = get_scan_dict(z_angles, cartesian_list=cartesian_list)
+    #     if save:
+    #         save_raw_scan(config.raw_path, raw_scan)
+
+    #     array_3D = merge_2D_points(raw_scan, 
+    #                             position_offset=(0, config.get("3D","Y_OFFSET"), 0),     # Y offset in mm
+    #                             angle_offset=config.get("LIDAR","LIDAR_OFFSET_ANGLE"),   # small lidar rotation fix
+    #                             up_vector=(0,0,1)) 
 
 
     normal_radius = config.get("3D","NORMAL_RADIUS")  # radius for normal estimation in mm
     pcd = pcd_from_np(array_3D, estimate_normals=True, max_nn=50, radius=normal_radius)
-    print("2D->3D merge completed.")
+    print("\n2D->3D merge completed.")
 
     pcd = postprocess_3D(config, pcd, save=save)
-    print("processing 3D completed.")
+    print("\nprocessing 3D completed.")
     return pcd
 
 
@@ -354,7 +354,7 @@ def save_pointcloud(pcd, filepath, ply_ascii=False, ply_compression=True, csv_de
             e57.write_scan_raw(data_raw)
         e57.close()
     
-    print("export completed.")
+    print("\nexport completed.")
 
 def save_pointcloud_threaded(pcd, output_path, ply_ascii=False, ply_compression=True, csv_delimiter=","):
     export_thread = threading.Thread(target=save_pointcloud, args=(pcd, output_path, ply_ascii, ply_compression, csv_delimiter))
