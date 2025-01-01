@@ -60,7 +60,7 @@ class Orientation:
 
 if __name__ == '__main__':
 
-    visualize = False
+    visualize = True
 
     if visualize:
         arrows = []
@@ -69,7 +69,7 @@ if __name__ == '__main__':
             """Convert Euler angles to a rotation matrix."""
             return R.from_euler('xyz', [euler.x, euler.y, euler.z]).as_matrix()
 
-        def create_arrow(length=1.0, radius=0.05, resolution=20, color=[1, 0, 0]):
+        def create_arrow(length=1.0, radius=0.02, resolution=4, color=[1, 0, 0]):
             """Create an arrow mesh."""
             arrow = o3d.geometry.TriangleMesh.create_arrow(
                 cylinder_radius=radius,
@@ -84,7 +84,7 @@ if __name__ == '__main__':
             return arrow
 
 
-    q_list_int16 = np.load('imu_orientation/quaternions.npz')['quat']  # TODO: load from raw_data["quaternion"] instead
+    q_list_int16 = np.load('scans/quaternion_test.npz')['quat']  # TODO: load from raw_data["quaternion"] instead
     orientation = Orientation(q_list_int16, degrees=True)
     
 
