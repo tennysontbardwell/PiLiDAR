@@ -6,7 +6,7 @@ from lib.a4988_driver import A4988
 from lib.imu_driver import MPU6050Wrapper
 from lib.config import Config, format_value
 from lib.pointcloud import process_raw, save_raw_scan, get_scan_dict
-from lib.rpicam_utils import take_HDR_photo, estimate_camera_parameters
+from lib.rpicam_utils import take_HDR_photo, estimate_camera_parameters  #, take_photo
 from lib.pano_utils import hugin_stitch
 
 
@@ -50,6 +50,14 @@ if enable_lidar:
     def move_steps_callback():
         stepper.move_steps(config.steps if config.SCAN_ANGLE > 0 else -config.steps)
         lidar.z_angle = stepper.get_current_angle()
+
+        # # DEBUG: take photo at each step
+        # imgpath = os.path.join(config.scan_dir, f"{format_value(lidar.z_angle, 2)}.jpg")
+        # take_photo(path=imgpath,
+        #            exposure_time=current_exposure_time, 
+        #            gain=current_gain,
+        #            awbgains=current_awbgains,
+        #            denoise="cdn_fast")
 
         if enable_IMU:
             # euler = imu.get_euler_angles()
@@ -109,8 +117,7 @@ try:
     # 180° SCAN
     if enable_lidar:
         print("\nLIDAR STARTED...\n")
-        lidar.read_loop(callback=move_steps_callback, 
-                        max_packages=config.max_packages)
+        lidar.read_loop(callback=move_steps_callback, max_packages=config.max_packages)
         
         stepper.move_to_angle(0)   # return to 0°
 
